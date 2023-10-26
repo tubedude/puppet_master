@@ -16,9 +16,10 @@ app.get('/ping', (req, res) => {
 });
 
 // Endpoint to generate DBML
-app.post('/generate-dbml', async (req, res) => {
+app.get('/generate-dbml', async (req, res) => {
     console.log('Received request to generate DBML.');
-    const { url } = req.body;
+    // const { url } = req.body;
+    const { url } = req.query
 
     if (!url) {
         console.log('URL missing in request body.');
