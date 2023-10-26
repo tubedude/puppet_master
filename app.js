@@ -1,18 +1,19 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const bodyParser = require('body-parser');
-// const fs = require('fs');
 
 const app = express();
 app.use(express.static('public'));
-
 
 // Use body-parser middleware to parse JSON requests
 app.use(bodyParser.json());
 
 // /ping endpoint
-app.get('/ping', (req, res) => {
+app.get('/ping.html', (req, res) => {
     res.sendFile(__dirname + '/public/ping.html');
+});
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong!');
 });
 
 // Endpoint to generate DBML
@@ -30,10 +31,6 @@ app.get('/generate-dbml', async (req, res) => {
     try {
         const rawData = await extractBubbleData(url);
         console.log('Raw Data extracted. Generating DBML syntax');
-        // console.log("rawData", rawData);
-        // res.set('Content-Type', 'Application/json');
-        // res.send(rawData);
-        // const dbmlData = generateDbDiagramSyntax(rawData);
         console.log('Sending DBML data response.');
         res.set('Content-Type', 'text/plain');
         res.send(rawData);
@@ -205,96 +202,6 @@ async function extractBubbleData(url) {
 
     return result;
 }
-
-function generateDbDiagramSyntax(raw_result) {
-    const data = JSON.parse(raw_result);
-    // const data = raw_result;
-
-    if (!data || !Array.isArray(data) || data.length === 0) {
-        throw new Error("Invalid data format.");
-    }
-
-    if (!data[0].json || !data[0].json.cache) {
-        throw new Error("Invalid data structure.");
-    }
-
-    data.forEach((item) => {
-        const table_name = data.name();
-
-        // add the Table and the default Bubble fields
-        dbdiagram_dbml +=
-            `Table public.${table_name} {\n\t_id text [pk, unique]\n\t"Modified date" date\n\t"Created data" date`;
-
-        // if it's the user table, add the email field
-        if (table_name == "user") {
-            dbdiagram_dbml += `\n\temail text [unique]`;
-        }
-
-        const child = item.json.cache["%f3"];
-        for (let long_key in child) {
-            // console.log("child", child[long_key]);
-            // console.log("long_key", long_key);
-            if (child.hasOwnProperty(long_key)) {
-                // Access the object using the property long_key
-                const innerObject = child[long_key];
-                let key = innerObject["%d"];
-                if (!key.includes(" - deleted")) {
-                    let value = innerObject["%v"];
-                    let new_value = value; // use this variable to manipulate and put the value back into the text file
-                    let connection_direction = "-";
-                    let log_string = "logging starting";
-                    if (value.includes("list.")) {
-                        // log_string += "\nvalue includes list";
-                        new_value = value.replace("list.", "");
-                        // log_string += "\nstarting key: " + key + "\nvalue: " + value +  "\nnew_value: " + new_value;
-                        if (value.includes("custom.")) {
-                            // log_string += "\nkey has 'custom.'";
-                            new_value = new_value.replace("custom.", "");
-                            // add the reference to the references variable
-                            connection_direction = ">";
-                            new_value += ` [ref: ${connection_direction} ${new_value}._id]`;
-                        } else if (value.includes("user")) {
-                            connection_direction = ">";
-                            new_value += ` [ref: ${connection_direction} user._id]`;
-                        } else {
-                            new_value += "[]";
-                        };
-                    }
-                    // log_string += "\nending:\nkey: " + key + "\nvalue: " + value + "\nnew_value: " + new_value;
-                    // console.log(log_string);
-                    //handle api key
-                    // TODO change it to make it point to the API schema -- meaning, change the normal one to include public behind every table name
-                    if (value.includes("api.")) {
-                        // console.log("value includes api, calling function to create table");
-                        value = value.replace("api.", "");
-
-                        const dotIndex = value.indexOf(".");
-                        const new_table = value.substring(0, dotIndex);
-                        const new_key = value.substring(dotIndex + 1);
-
-                        // console.log(new_table); // "stripe"
-                        // console.log(new_key);
-
-                        api_search(new_table, new_key.replace(/\[\]/g, ""), table_name, key);
-                    }
-
-                    value = value.replace("option.", "option_");
-                    // console.log(`\n\t"${key}" ${new_value}`);
-                    // console.log(`${new_value}`);
-                    dbdiagram_dbml += `\n\t"${key}" ${new_value}`;
-                }
-                // dbdiagram_dbml += `\n`;
-
-                // Access the properties of the inner object
-                //console.log("innerObject", innerObject)
-            }
-        }
-        dbdiagram_dbml += `\n}\n\n`;
-    });
-
-    return output;
-}
-
 
 function quoteIfNeeded(type) {
     if (type.includes('.')) {
