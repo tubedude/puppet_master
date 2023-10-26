@@ -22,7 +22,7 @@ app.get('/generate-dbml', async (req, res) => {
     const { url } = req.query
 
     if (!url) {
-        console.log('URL missing in request body.');
+        console.log('URL missing in query params.');
         return res.status(400).send('URL is required.');
     }
 
@@ -75,9 +75,7 @@ async function extractBubbleData(url) {
             } else {
                 api += `Table ${table} {\n\t${key} int\n}\n\n`;
             }
-            references +=
-                `\nRef: ${current_table}."${current_key}" > ${table}.${key}`;
-            // console.log("api", api);
+            
         }
 
         dbdiagram_dbml += ``;
