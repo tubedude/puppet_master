@@ -151,7 +151,7 @@ async function extractBubbleData(url, browser, res) {
                             // log_string += "\nstarting key: " + key + "\nvalue: " + value +  "\nnew_value: " + new_value;
                             if (value.includes("custom.")) {
                                 // log_string += "\nkey has 'custom.'";
-                                new_value = new_value.replace("custom.", "");
+                                // new_value = new_value.replace("custom.", "");
                                 // add the reference to the references variable
                                 connection_direction = ">";
                                 new_value +=
