@@ -36,6 +36,8 @@ app.get('/generate-dbml', async (req, res) => {
         ],
         headless: "new"
     });
+    
+   
 
     console.log(`Extracting Bubble Data from URL: ${url}`);
     try {
@@ -46,11 +48,21 @@ app.get('/generate-dbml', async (req, res) => {
         // res.send(rawData);
         // const dbmlData = generateDbDiagramSyntax(rawData);
         console.log('Sending DBML data response.');
-        res.set('Content-Type', 'text/plain');
-        res.send(rawData);
+        res.set('Content-Type', 'application/json');
+        return res.status(200).json({
+            error: "",
+            url: url,
+            diagram: rawData.diagram,
+            isBubbleApp: rawData.isBubbleApp,
+          });
     } catch (error) {
         console.error("Error encountered:", error);
-        res.status(500).send(`Error encountered: ${error.message}`);
+        res.status(500).json({
+            error: error,
+            url: url,
+            diagram: "",
+            isBubbleApp: "",
+          });
     } finally {
         console.log("closing puppeteer browser")
         await browser.close();
@@ -58,16 +70,33 @@ app.get('/generate-dbml', async (req, res) => {
 });
 
 async function extractBubbleData(url, browser) {
-
+    const result = {}
     const page = await browser.newPage();
 
     page.setDefaultNavigationTimeout(60000); // 60 seconds
 
     console.log(`Navigating to page: ${url}`);
     await page.goto(url);
+    
+    // check if the url is a Bubble app by checking if the appquery object exists
+    const isBubbleApp = await page.evaluate(() => {
+      return typeof appquery === "function";
+    });
+    console.log("isBubbleApp", isBubbleApp);
+    result.isBubbleApp = isBubbleApp;
+    
+    if (isBubbleApp === false) {
+      console.log(`does not seem to be a Bubble app ${url}`);
+      return res.status(400).json({
+        error: `not a Bubble app`,
+        url: url,
+        diagram: "",
+        isBubbleApp: isBubbleApp,
+      });
+    }
 
     console.log('Evaluating the page.');
-    const result = await page.evaluate(() => {
+    const diagram = await page.evaluate(() => {
         const types = appquery.custom_types();
         const option_sets = appquery.option_sets();
         const dbdiagram_json = {};
@@ -213,9 +242,7 @@ async function extractBubbleData(url, browser) {
         return dbdiagram_dbml;
     });
 
-    console.log('Closing the puppeteer browser.');
-    await browser.close();
-
+    result.diagram = diagram;
     return result;
 }
 
