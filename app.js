@@ -26,9 +26,20 @@ app.get('/generate-dbml', async (req, res) => {
         return res.status(400).send('URL is required.');
     }
 
+    console.log('Launching puppeteer browser.');
+    const browser = await puppeteer.launch({
+        args: [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ],
+        headless: "new"
+    });
+
     console.log(`Extracting Bubble Data from URL: ${url}`);
     try {
-        const rawData = await extractBubbleData(url);
+        const rawData = await extractBubbleData(url, browser);
         console.log('Raw Data extracted. Generating DBML syntax');
         // console.log("rawData", rawData);
         // res.set('Content-Type', 'Application/json');
@@ -40,12 +51,14 @@ app.get('/generate-dbml', async (req, res) => {
     } catch (error) {
         console.error("Error encountered:", error);
         res.status(500).send(`Error encountered: ${error.message}`);
+    } finally {
+        console.log("closing puppeteer browser")
+        await browser.close();
     }
 });
 
-async function extractBubbleData(url) {
-    console.log('Launching puppeteer browser.');
-    const browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: "new" });
+async function extractBubbleData(url, browser) {
+
     const page = await browser.newPage();
 
     page.setDefaultNavigationTimeout(60000); // 60 seconds
@@ -75,7 +88,7 @@ async function extractBubbleData(url) {
             } else {
                 api += `Table ${table} {\n\t${key} int\n}\n\n`;
             }
-            
+
         }
 
         dbdiagram_dbml += ``;
