@@ -18,6 +18,7 @@
     "puppeteer": "^21.4.1"
   },
   "devDependencies": {
+    "eslint": "^8.52.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1"
   }
