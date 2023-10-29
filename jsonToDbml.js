@@ -10,7 +10,6 @@ let dbdiagram = "";
 testData.custom_types.forEach((item) => {
 	item.path = item.path.replace("user_types.", "custom.") 
 	dbdiagram += `Table ${item.path} {`
-	// TODO: add unique id
 	dbdiagram += `\n\t_id text [pk, unique]`
 	// TODO: check if references are working
 	
@@ -21,7 +20,8 @@ testData.custom_types.forEach((item) => {
 		let refDirection = "-";
 		type = userIdIfNeeded(type);
 		type = handleApiConnector(type);
-		if (type.includes("list.") && type.includes("custom.")) {
+		if (field.type.includes("list.") && field.type.includes("custom.")) {
+			// console.log("type includes list.custom.", type)
 			type = type.replace(/list\.custom\./g, "");
 			refDirection = ">";
 		}
@@ -44,6 +44,7 @@ testData.custom_types.forEach((item) => {
 	dbdiagram += `\n}\n\n`
 });
 
+// TODO: tweak the option sets to behave the same as custom_types
 testData.option_sets.forEach((item) => {
 	dbdiagram += `Table ${item.path} {`
 		item.attributes.forEach((attribute) => {
@@ -64,8 +65,6 @@ testData.option_sets.forEach((item) => {
 	dbdiagram += `\n}\n\n`
 })
 
-// console.log(dbdiagram)
-
 // The file path where you want to write the content
 const filePath = './diagram.dbml';
 
@@ -84,16 +83,20 @@ function userIdIfNeeded(type) {
 	return type;
 }
 
-function refIfNeeded(type, refDirection) {
-	if (type === undefined) {
-		console.log(type);
-		return
+function refIfNeeded(type) {
+	// console.log(!type.includes("."));
+	// if (refDirection !== "-") console.log("refDirection is not '-'", refDirection)
+	if (!type.includes(".")) return ""
+	if (type.includes(".") && type.includes("[]")) {
+		const output = ` [ref: > ${type.replace("[]","")}._id]`
+		return output;
 	}
-	if (type.includes(".")) {
-		if (type.includes("[]")) type = type.replace("[]","");
-		return ` [ref: ${refDirection} ${type}._id]`
+	if (type.includes(".") && !type.includes("[]")) {
+		const output = ` [ref: - ${type}._id]`
+		console.log(output);
+		return output;
 	}
-	return ``;
+	
 }
 
 
@@ -102,16 +105,14 @@ function handleApiConnector(type) {
 	// TODO: create the api table if it doesn't exist, probably at the end of the initial loops, it checks for empty references and creates the needed tables.
 	var match = type.match(regexApi);
 	if (match) {
-		console.log(match);
 		var capturedGroup = match[1];
 		var replacedText = capturedGroup.replace(/\./g , "_");
 		type = match[0].replace(match[1], replacedText)
-		console.log("type to be returned: ", type)
 		return type;
 	}
 	return type;
 }
-
+// 
 // Write the content to the file
 fs.writeFile(filePath, dbdiagram, err => {
   if (err) {

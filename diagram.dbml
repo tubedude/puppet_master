@@ -67,9 +67,9 @@ Table custom._application {
 	"z_applicant_address - deleted" geographic_address
 	"applicant_is_beneficial_owner" boolean
 	"_documents" dwolla_documents
-	"biz_diversity" option.business_identity[] [ref: - option.business_identity._id]
+	"biz_diversity" option.business_identity[] [ref: > option.business_identity._id]
 	"_onboarding_status" option.onboarding_status [ref: - option.onboarding_status._id]
-	"_steps_completed" option.onboarding_steps[] [ref: - option.onboarding_steps._id]
+	"_steps_completed" option.onboarding_steps[] [ref: > option.onboarding_steps._id]
 	"_subscription_offer" custom.subscription_type [ref: - custom.subscription_type._id]
 	"biz_entity_dwolla" option.business_type___dwolla [ref: - option.business_type___dwolla._id]
 	"_beneficial_owners" beneficial_owner
@@ -325,7 +325,7 @@ Table custom.bill {
 	"status_scanning_attachment" boolean
 	"_taxItems" bill_tax_item
 	"_approval_flow" custom.approval_chain [ref: - custom.approval_chain._id]
-	"Alerts Dismissed" option.alert___bills[] [ref: - option.alert___bills._id]
+	"Alerts Dismissed" option.alert___bills[] [ref: > option.alert___bills._id]
 	"_lineItems" bill_line_item
 	"_customFields" bill_custom_field
 	"status_approval" option.bill_approval_status [ref: - option.bill_approval_status._id]
@@ -997,7 +997,7 @@ Table custom.company {
 	"_dwolla_status" option.dwolla_status_of_company [ref: - option.dwolla_status_of_company._id]
 	"Object to Hide - deleted" option.company___object_to_hide [ref: - option.company___object_to_hide._id]
 	"_dwolla_documents" dwolla_documents
-	"_segments_to_hide" option.company___object_to_hide[] [ref: - option.company___object_to_hide._id]
+	"_segments_to_hide" option.company___object_to_hide[] [ref: > option.company___object_to_hide._id]
 	"_dwolla_biz_type" option.business_type___dwolla [ref: - option.business_type___dwolla._id]
 	"_zzacct_integration_type" option.integration_options [ref: - option.integration_options._id]
 	"_marqeta_biz_type" option.marqeta___business_type [ref: - option.marqeta___business_type._id]
@@ -1170,8 +1170,8 @@ Table custom.event_trigger {
 	EventOperation option.event_trigger_type [ref: - option.event_trigger_type._id]
 	"event_action - deleted" option.event_trigger_action [ref: - option.event_trigger_action._id]
 	EventType option.event_trigger_object [ref: - option.event_trigger_object._id]
-	"???event_actions" option.event_trigger_action[] [ref: - option.event_trigger_action._id]
-	"???event_integrations" option.event_integration[] [ref: - option.event_integration._id]
+	"???event_actions" option.event_trigger_action[] [ref: > option.event_trigger_action._id]
+	"???event_integrations" option.event_integration[] [ref: > option.event_integration._id]
 }
 
 Table custom.export_settings_line {
@@ -1583,7 +1583,7 @@ Table custom.request_link {
 	"optional_fields_json" text
 	"optional_fields" text[]
 	"_approval_rule" custom.department [ref: - custom.department._id]
-	"_coa_segments_to_show" option.company___object_to_hide[] [ref: - option.company___object_to_hide._id]
+	"_coa_segments_to_show" option.company___object_to_hide[] [ref: > option.company___object_to_hide._id]
 }
 
 Table custom.segment {
