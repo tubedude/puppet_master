@@ -1,6 +1,6 @@
 module.exports = () => {
 	const data = appquery.custom_types() || [];
-	const types = {}
+	const types = []
 
 	data.forEach((item) => {
 		var name = item.json.__name;
@@ -12,15 +12,15 @@ module.exports = () => {
 				type: item.json.cache["%f3"][field]["%v"]
 			})
 		}
-		types[name] = {
+		types.push(name = {
 			name: name,
 			path: item.json.__path,
 			fields: fields
-		}
+		})
 	})
 
 	const osData = appquery.option_sets();
-	const os = {};
+	const os = [];
 
 	osData.forEach((item) => {
 		var name = item.json.__name;
@@ -33,18 +33,18 @@ module.exports = () => {
 			// console.log("attribute", osAttributes[attribute])
 			attributes.push(attribute = {
 				name: osAttributes[attribute]["%d"],
-				value: osAttributes[attribute]["%v"],
+				type: osAttributes[attribute]["%v"],
 			})
 		}
 		for (let value in osValues) {
 			values.push(osValues[value])
 		}
-		os[name] = {
+		os.push(name = {
 			name: name,
 			path: item.json.__path,
 			attributes: attributes,
 			values: values
-		}
+		})
 	})
 
 	// console.log(os);
