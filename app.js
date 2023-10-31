@@ -3,10 +3,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const createDiagramJson = require("./createDiagramJson");
 const jsonToDbml = require("./jsonToDbml");
-const writeToFile = require("./writeToFile");
+// const writeToFile = require("./writeToFile");
 
 const app = express();
 app.use(express.static("public"));
+
+
 
 /**
  * The object that is returned
@@ -70,12 +72,12 @@ app.get("/generate-dbml", async (req, res) => {
 
         console.log("extracting db in json format");
         result.db = await extractBubbleData(page);
-        writeToFile(JSON.stringify(result.db), result.url, "json");
+        // writeToFile(JSON.stringify(result.db), result.url, "json");
 
         console.log("Raw Data extracted. Generating DBML syntax");
         result.diagram = jsonToDbml(result.db);
 
-        writeToFile(result.diagram, result.url, "dbml");
+        // writeToFile(result.diagram, result.url, "dbml");
 
 
         console.log("Sending DBML data response.");

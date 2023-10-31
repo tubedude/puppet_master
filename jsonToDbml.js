@@ -33,7 +33,7 @@ const jsonToDbml = (db) => {
             }
 
             field.name = quoteIfNeeded(field.name);
-
+            if (type.includes("options.")) type = type.replace("options.", "option_sets.");
             dbdiagram += `\n\t${field.name} ${type}`;
             dbdiagram += refIfNeeded(type, refDirection);
             // if (field.type.includes(".")) {
@@ -45,8 +45,9 @@ const jsonToDbml = (db) => {
     });
 
     db.option_sets.forEach((item) => {
-        if (item.fields.length === 0) return;
-        dbdiagram += `Table ${quoteIfNeeded(item.path)} {`;
+        // split path by '.' so that each is rendered separatedly
+        const split = item.path.split('.');
+        dbdiagram += `Table ${quoteIfNeeded(split[0])}.${quoteIfNeeded(split[1])} {`;
 		dbdiagram += `\n\tDisplay text`
         item.fields.forEach((field) => {
 			if (field.name.includes("- deleted")) return
@@ -67,7 +68,7 @@ const jsonToDbml = (db) => {
                 type = field.type.replace(/list\./g, "");
                 type += `[]`;
             }
-            // TODO add [ref:]
+            // split name and put it back together with quotes
             dbdiagram += `\n\t${quoteIfNeeded(field.name)} ${type}`;
         });
         dbdiagram += `\n}\n\n`;
@@ -96,9 +97,13 @@ const jsonToDbml = (db) => {
             // console.log(type);
             return;
         }
+        // fix for option sets naming convention
+        type = type.replace("option.","option_sets.");
+        let referenceId = "_id"
+        if (type.includes("option_sets.")) referenceId = "Display"
         if (type.includes(".")) {
             if (type.includes("[]")) type = type.replace("[]", "");
-            return ` [ref: ${refDirection} ${type}._id]`;
+            return ` [ref: ${refDirection} ${type}.${referenceId}]`;
         }
         return ``;
     }

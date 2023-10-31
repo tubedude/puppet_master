@@ -10,10 +10,12 @@ module.exports = async (page) => {
             var fieldsObj = item.json.cache["%f3"];
             var fields = [];
             for (let field in fieldsObj) {
+                let type = item.json.cache["%f3"][field]["%v"];
+                if (type.includes("option.")) type = type.replace("option.", "option_sets.");
                 fields.push(
                     (field = {
                         name: item.json.cache["%f3"][field]["%d"],
-                        type: item.json.cache["%f3"][field]["%v"],
+                        type: type,
                     })
                 );
             }
@@ -31,13 +33,12 @@ module.exports = async (page) => {
 
         osData.forEach((item) => {
             var name = item.json.__name;
-            var osObj = item.json.cache;
+            // var osObj = item.json.cache;
             var osAttributes = item.json.cache.attributes;
             var osValues = item.json.cache.values;
             var attributes = [];
             let values = [];
             for (let attribute in osAttributes) {
-                // console.log("attribute", osAttributes[attribute])
                 attributes.push(
                     (attribute = {
                         name: osAttributes[attribute]["%d"],
