@@ -15,13 +15,6 @@ app.use(express.static("public"));
  * @property {boolean} hasPower - Indicates whether the Power component is present.
  * @property {boolean} hasWisdom - Indicates whether the Wisdom component is present.
  */
-const result = {
-    error: "", // error object's message
-    url: "", // the url that is returned
-    diagram: "", // the string of the dbml
-    isBubbleApp: true, // boolean if the Bubble app
-    db: {}, // json of extracted json data
-};
 
 // Use body-parser middleware to parse JSON requests
 app.use(bodyParser.json());
@@ -33,6 +26,7 @@ app.get("/ping", (req, res) => {
 
 // Endpoint to generate DBML
 app.get("/generate-dbml", async (req, res) => {
+    const result = {};
     console.log("Received request to generate DBML.");
     // const { url } = req.body;
     const { url } = req.query;
