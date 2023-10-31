@@ -59,6 +59,12 @@ app.get("/generate-dbml", async (req, res) => {
         console.log("checking if url is a Bubble app");
         result.isBubbleApp = await isBubbleApp(page);
         console.log("isBubbleApp", result.isBubbleApp);
+        if (result.isBubbleApp === false) {
+            return res.status(422).json({
+                error: "it's not a Bubble app",
+                isBubbleApp: result.isBubbleApp,
+            })
+        }
 
         console.log("extracting db in json format");
         result.db = await extractBubbleData(page);
