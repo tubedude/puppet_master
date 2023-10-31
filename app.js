@@ -1,33 +1,50 @@
-const puppeteer = require('puppeteer');
-const express = require('express');
-const bodyParser = require('body-parser');
-const createDiagramJson = require('./createDiagramJson');
+const puppeteer = require("puppeteer");
+const express = require("express");
+const bodyParser = require("body-parser");
+const createDiagramJson = require("./createDiagramJson");
+const jsonToDbml = require("./jsonToDbml");
+const writeToFile = require("./writeToFile");
 
 const app = express();
-app.use(express.static('public'));
+app.use(express.static("public"));
 
+/**
+ * The object that is returned
+ * @typedef {Object} result
+ * @property {boolean} hasCourage - Indicates whether the Courage component is present.
+ * @property {boolean} hasPower - Indicates whether the Power component is present.
+ * @property {boolean} hasWisdom - Indicates whether the Wisdom component is present.
+ */
+const result = {
+    error: "", // error object's message
+    url: "", // the url that is returned
+    diagram: "", // the string of the dbml
+    isBubbleApp: true, // boolean if the Bubble app
+    db: {}, // json of extracted json data
+};
 
 // Use body-parser middleware to parse JSON requests
 app.use(bodyParser.json());
 
 // /ping endpoint
-app.get('/ping', (req, res) => {
-    res.sendFile(__dirname + '/public/ping.html');
+app.get("/ping", (req, res) => {
+    res.sendFile(__dirname + "/public/ping.html");
 });
 
 // Endpoint to generate DBML
-app.get('/generate-dbml', async (req, res) => {
-    console.log('Received request to generate DBML.');
+app.get("/generate-dbml", async (req, res) => {
+    console.log("Received request to generate DBML.");
     // const { url } = req.body;
-    const { url } = req.query
-    res.set('Content-Type', 'application/json');
+    const { url } = req.query;
+    result.url = url;
+    res.set("Content-Type", "application/json");
 
     if (!url) {
-        console.log('URL missing in query params.');
-        return res.status(400).send('URL is required.');
+        console.log("URL missing in query params.");
+        return res.status(400).send("URL is required.");
     }
 
-    console.log('Launching puppeteer browser.');
+    console.log("Launching puppeteer browser.");
     const browser = await puppeteer.launch({
         args: [
             "--disable-setuid-sandbox",
@@ -35,166 +52,52 @@ app.get('/generate-dbml', async (req, res) => {
             "--single-process",
             "--no-zygote",
         ],
-        headless: "new"
+        headless: "new",
     });
-    
-   
 
     console.log(`Extracting Bubble Data from URL: ${url}`);
     try {
-        const rawData = await extractBubbleData(url, browser, res);
-        console.log('Raw Data extracted. Generating DBML syntax');
+        const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(60000); // 60 seconds
+        console.log(`Navigating to page: ${url}`);
+        await page.goto(url);
 
-        console.log('Sending DBML data response.');
-        return res.status(200).json({
-            error: rawData.error,
-            url: url,
-            diagram: rawData.diagram,
-            isBubbleApp: rawData.isBubbleApp,
-          });
+        console.log("checking if url is a Bubble app");
+        result.isBubbleApp = await isBubbleApp(page);
+        console.log("isBubbleApp", result.isBubbleApp);
+
+        console.log("extracting db in json format");
+        result.db = await extractBubbleData(page);
+
+        console.log("Raw Data extracted. Generating DBML syntax");
+        result.diagram = jsonToDbml(result.db);
+
+        await writeToFile(result.diagram, result.url);
+
+        console.log("Sending DBML data response.");
+        return res.status(200).json(result);
     } catch (error) {
         console.error("Error encountered:", error);
-        res.status(500).json({
-            error: error.message,
-            url: url,
-            diagram: "",
-            isBubbleApp: "",
-          });
+        result.error = error;
+        res.status(500).json(result);
     } finally {
-        console.log("closing puppeteer browser")
+        console.log("closing puppeteer browser");
         await browser.close();
     }
 });
 
-async function extractBubbleData(url, browser, res) {
-    const result = {}
-    const page = await browser.newPage();
-
-    page.setDefaultNavigationTimeout(60000); // 60 seconds
-
-    console.log(`Navigating to page: ${url}`);
-    await page.goto(url);
-    
-    // check if the url is a Bubble app by checking if the appquery object exists
+async function isBubbleApp(page) {
     const isBubbleApp = await page.evaluate(() => {
-      return typeof appquery === "function";
+        return typeof appquery === "function";
     });
     console.log("isBubbleApp", isBubbleApp);
-    result.isBubbleApp = isBubbleApp;
-    
-    if (isBubbleApp === false) {
-      console.log(`does not seem to be a Bubble app ${url}`);
-      result.error = "not a Bubble app"
-      return result;
-    }
-
-    console.log('Evaluating the page.');
-    const db = await createDiagramJson(page);
-
-    console.log("db", db);
-    
-
-
-function generateDbDiagramSyntax(raw_result) {
-    const data = JSON.parse(raw_result);
-    // const data = raw_result;
-
-    if (!data || !Array.isArray(data) || data.length === 0) {
-        throw new Error("Invalid data format.");
-    }
-
-    if (!data[0].json || !data[0].json.cache) {
-        throw new Error("Invalid data structure.");
-    }
-
-    data.forEach((item) => {
-        const table_name = data.name();
-
-        // add the Table and the default Bubble fields
-        dbdiagram_dbml +=
-            `Table custom.${table_name} {\n\t_id text [pk, unique]\n\t"Modified date" date\n\t"Created data" date`;
-
-        // if it's the user table, add the email field
-        if (table_name == "user") {
-            dbdiagram_dbml += `\n\temail text [unique]`;
-        }
-
-        const child = item.json.cache["%f3"];
-        for (let long_key in child) {
-            // console.log("child", child[long_key]);
-            // console.log("long_key", long_key);
-            if (child.hasOwnProperty(long_key)) {
-                // Access the object using the property long_key
-                const innerObject = child[long_key];
-                let key = innerObject["%d"];
-                if (!key.includes(" - deleted")) {
-                    let value = innerObject["%v"];
-                    let new_value = value; // use this variable to manipulate and put the value back into the text file
-                    let connection_direction = "-";
-                    let log_string = "logging starting";
-                    if (value.includes("list.")) {
-                        // log_string += "\nvalue includes list";
-                        new_value = value.replace("list.", "");
-                        // log_string += "\nstarting key: " + key + "\nvalue: " + value +  "\nnew_value: " + new_value;
-                        if (value.includes("custom.")) {
-                            // log_string += "\nkey has 'custom.'";
-                            new_value = new_value.replace("custom.", "");
-                            // add the reference to the references variable
-                            connection_direction = ">";
-                            new_value += ` [ref: ${connection_direction} ${new_value}._id]`;
-                        } else if (value.includes("user")) {
-                            connection_direction = ">";
-                            new_value += ` [ref: ${connection_direction} user._id]`;
-                        } else {
-                            new_value += "[]";
-                        };
-                    }
-                    // log_string += "\nending:\nkey: " + key + "\nvalue: " + value + "\nnew_value: " + new_value;
-                    // console.log(log_string);
-                    //handle api key
-                    // TODO change it to make it point to the API schema -- meaning, change the normal one to include public behind every table name
-                    if (value.includes("api.")) {
-                        // console.log("value includes api, calling function to create table");
-                        value = value.replace("api.", "");
-
-                        const dotIndex = value.indexOf(".");
-                        const new_table = value.substring(0, dotIndex);
-                        const new_key = value.substring(dotIndex + 1);
-
-                        // console.log(new_table); // "stripe"
-                        // console.log(new_key);
-
-                        api_search(new_table, new_key.replace(/\[\]/g, ""), table_name, key);
-                    }
-
-                    value = value.replace("option.", "option_");
-                    // console.log(`\n\t"${key}" ${new_value}`);
-                    // console.log(`${new_value}`);
-                    dbdiagram_dbml += `\n\t"${key}" ${new_value}`;
-                }
-                // dbdiagram_dbml += `\n`;
-
-                // Access the properties of the inner object
-                //console.log("innerObject", innerObject)
-            }
-        }
-        dbdiagram_dbml += `\n}\n\n`;
-    });
-
-    return output;
 }
 
-
-function quoteIfNeeded(type) {
-    if (type.includes('.')) {
-        return `"${type}"`;
-    }
-    return type;
+async function extractBubbleData(page) {
+    console.log("Evaluating the page.");
+    return await createDiagramJson(page);
 }
 
 module.exports = {
     app,
-    generateDbDiagramSyntax,
-    quoteIfNeeded,
-    extractBubbleData
 };

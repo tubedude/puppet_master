@@ -1920,525 +1920,423 @@ Table custom.user {
 	"Pending email verification" custom.email_verification_request [ref: - custom.email_verification_request._id]
 }
 
-Table option_sets.%p3 {
-	page_name text
+Table "option_sets.%p3" {
+	"page_name" text
 }
 
-Table option_sets.active_status {
-	Active - deleted text
-	Yes/No boolean
-	Bank Account Connected text
+Table "option_sets.active_status" {
+	"Active - deleted" text
+	"Yes/No" boolean
+	"Bank Account Connected" text
 }
 
-Table option_sets.alert___bills {
-}
-
-Table option_sets.app_colors {
+Table "option_sets.app_colors" {
 	hover text
 	standard text
 }
 
-Table option_sets.bill_approval_status {
-}
-
-Table option_sets.bill_payee_options {
+Table "option_sets.bill_payee_options" {
 	type option.bill_payment_approval_method
 	textToShow text
 	userPaysFees boolean
-	typeFeeApproval - deleted boolean
+	"typeFeeApproval - deleted" boolean
 	userApprovesFees boolean
 	userEntersDetails boolean
-	typeDetailsEntered - deleted boolean
+	"typeDetailsEntered - deleted" boolean
 }
 
-Table option_sets.bill_payment_approval_method {
-	payeePays - deleted boolean
-	Text to show - deleted text
+Table "option_sets.bill_payment_approval_method" {
+	"payeePays - deleted" boolean
+	"Text to show - deleted" text
 }
 
-Table option_sets.bill_payment_status {
+Table "option_sets.bill_payment_status" {
 	color option.statuscolors
 	colorText text
-	Can modify boolean
+	"Can modify" boolean
 	colorBadge text
 }
 
-Table option_sets.bill_status {
+Table "option_sets.bill_status" {
 	color option.statuscolors
 	canEdit boolean
 	isTerminal boolean
-	canDelete? boolean
+	"canDelete?" boolean
 	canMarkAsPaid boolean
 	canAddApprover boolean
 	possibleNextStates option.bill_status[]
-	Cancel Payment Text text
+	"Cancel Payment Text" text
 }
 
-Table option_sets.billing_period {
+Table "option_sets.billing_period" {
 	days number
-	SBFE_code text
+	"SBFE_code" text
 }
 
-Table option_sets.breakpoints {
+Table "option_sets.breakpoints" {
 	min number
 }
 
-Table option_sets.business_identity {
-}
-
-Table option_sets.business_type___dwolla {
+Table "option_sets.business_type___dwolla" {
 	SBFE text
 	Dwolla text
 	BanCorp text
-	Controller? boolean
-	_marqeta_type option.marqeta___business_type
+	"Controller?" boolean
+	"_marqeta_type" option.marqeta___business_type
 }
 
-Table option_sets.button_link {
-	page_path text
-	txt_button text
+Table "option_sets.button_link" {
+	"page_path" text
+	"txt_button" text
 }
 
-Table option_sets.charge_item_fields {
+Table "option_sets.charge_item_fields" {
 	description text
 	dontShow boolean
 	sanitize boolean
-	json_field text
-	export_type option.type_of_export
-	raw_field_name text
-	is_amount_field boolean
-	dropdown_display text
-	raw_field_name_2 text
-	raw_field_name_3 text
+	"json_field" text
+	"export_type" option.type_of_export
+	"raw_field_name" text
+	"is_amount_field" boolean
+	"dropdown_display" text
+	"raw_field_name_2" text
+	"raw_field_name_3" text
 }
 
-Table option_sets.charge_status {
+Table "option_sets.charge_status" {
 	values option.charge_status[]
 	filterOnly boolean
 }
 
-Table option_sets.company___object_to_hide {
+Table "option_sets.company___object_to_hide" {
 	number number
 	showParentAccount boolean
 }
 
-Table option_sets.company_transition_type {
-}
-
-Table option_sets.delimiter {
+Table "option_sets.delimiter" {
 	value text
 }
 
-Table option_sets.dwolla___beneficial_owner_status {
+Table "option_sets.dwolla___beneficial_owner_status" {
 	Description text
 	Topic text
-	Transaction restricted boolean
+	"Transaction restricted" boolean
 }
 
-Table option_sets.dwolla___document_failure_reasons {
+Table "option_sets.dwolla___document_failure_reasons" {
 	Description text
 }
 
-Table option_sets.dwolla___document_types {
+Table "option_sets.dwolla___document_types" {
 	Description text
 	businessType option.business_type___dwolla[]
 	documentType text
-	forController? boolean
-	Accepted File types option.file_type[]
-	US Beneficial Owner boolean
-	Foreign Beneficial Owner boolean
+	"forController?" boolean
+	"Accepted File types" option.file_type[]
+	"US Beneficial Owner" boolean
+	"Foreign Beneficial Owner" boolean
 }
 
-Table option_sets.dwolla___suspension_codes {
-}
-
-Table option_sets.dwolla_api___document_create_error {
+Table "option_sets.dwolla_api___document_create_error" {
 	description text
 }
 
-Table option_sets.dwolla_status_of_company {
+Table "option_sets.dwolla_status_of_company" {
 	Description text
-	Transaction Restricted boolean
-	Dwolla Status text
-	Event Topic Name text
+	"Transaction Restricted" boolean
+	"Dwolla Status" text
+	"Event Topic Name" text
 	HideVerifyButton boolean
 	HideSubmitDocuments boolean
 }
 
-Table option_sets.emails {
+Table "option_sets.emails" {
 	content text
 }
 
-Table option_sets.errorsystem {
-}
-
-Table option_sets.event_integration {
-}
-
-Table option_sets.event_trigger_action {
-}
-
-Table option_sets.event_trigger_object {
-}
-
-Table option_sets.event_trigger_type {
-}
-
-Table option_sets.event_type {
-}
-
-Table option_sets.eventdirective {
-	Action - deleted option.event_trigger_action
+Table "option_sets.eventdirective" {
+	"Action - deleted" option.event_trigger_action
 	Type option.event_trigger_object
 	Operation option.event_trigger_type
 }
 
-Table option_sets.faq_type {
+Table "option_sets.faq_type" {
 	filter boolean
 	status boolean
 	values option.faq_type[]
-	subtitle_display text
+	"subtitle_display" text
 }
 
-Table option_sets.file_type {
+Table "option_sets.file_type" {
 	fileExtension text
 }
 
-Table option_sets.filter___bill_status {
+Table "option_sets.filter___bill_status" {
 	values option.bill_status[]
 }
 
-Table option_sets.filter_card_status {
+Table "option_sets.filter_card_status" {
 	values text[]
 }
 
-Table option_sets.global_url {
+Table "option_sets.global_url" {
 	live text
 	test text
 }
 
-Table option_sets.hours {
-	hour # number
+Table "option_sets.hours" {
+	"hour #" number
 }
 
-Table option_sets.integration_class {
-}
-
-Table option_sets.integration_options {
+Table "option_sets.integration_options" {
 	isExternal boolean
 }
 
-Table option_sets.integration_thirdparty_options {
+Table "option_sets.integration_thirdparty_options" {
 	isExternal boolean
 }
 
-Table option_sets.jit___create_charge_from_jit {
-	boolean Value boolean
+Table "option_sets.jit___create_charge_from_jit" {
+	"boolean Value" boolean
 }
 
-Table option_sets.js_company_functions {
+Table "option_sets.js_company_functions" {
 	fnName text
 }
 
-Table option_sets.js_function_name {
-}
-
-Table option_sets.js_functions {
+Table "option_sets.js_functions" {
 	fnName text
 }
 
-Table option_sets.marqeta___business_type {
-	Marqeta Text text
+Table "option_sets.marqeta___business_type" {
+	"Marqeta Text" text
 }
 
-Table option_sets.marqeta___card_type {
-}
-
-Table option_sets.marqeta___url {
+Table "option_sets.marqeta___url" {
 	URL text
 }
 
-Table option_sets.mq___auth_type {
+Table "option_sets.mq___auth_type" {
 	values text[]
 }
 
-Table option_sets.mq___card_status {
+Table "option_sets.mq___card_status" {
 	isFilter boolean
 	filterText text
 	filterValues option.mq___card_status[]
 }
 
-Table option_sets.oauth_provider {
+Table "option_sets.oauth_provider" {
 	MatchDays number
 	ShortCode text
-	Alert:SlackUrlSuffix text
-	FetchStarOverlap(Horus) number
-	Alert:TransactionCount number
+	"Alert:SlackUrlSuffix" text
+	"FetchStarOverlap(Horus)" number
+	"Alert:TransactionCount" number
 }
 
-Table option_sets.oauth_provider_apis {
+Table "option_sets.oauth_provider_apis" {
 	Method text
 	Endpoint text
-	OAuth Provider option.oauth_provider
+	"OAuth Provider" option.oauth_provider
 }
 
-Table option_sets.oauth_type {
-}
-
-Table option_sets.onboarding_role {
+Table "option_sets.onboarding_role" {
 	freeText boolean
 }
 
-Table option_sets.onboarding_status {
+Table "option_sets.onboarding_status" {
 	status option.statuscolors
-	is_open boolean
-	can_edit boolean
-	value_list option.onboarding_status[]
-	filter_only boolean
-	title_display text
+	"is_open" boolean
+	"can_edit" boolean
+	"value_list" option.onboarding_status[]
+	"filter_only" boolean
+	"title_display" text
 }
 
-Table option_sets.onboarding_steps {
-	txt_title text
+Table "option_sets.onboarding_steps" {
+	"txt_title" text
 	order number
-	txt_title2 text
-	txt_title3 text
-	hide_title boolean
-	step_number number
-	hide_buttons boolean
+	"txt_title2" text
+	"txt_title3" text
+	"hide_title" boolean
+	"step_number" number
+	"hide_buttons" boolean
 	createEvents option.onboarding_steps[]
-	Hubspot value text
-	txt_description text
-	total_sub_steps number
-	txt_description2 text
-	txt_description3 text
+	"Hubspot value" text
+	"txt_description" text
+	"total_sub_steps" number
+	"txt_description2" text
+	"txt_description3" text
 }
 
-Table option_sets.personal_portal___tabs {
+Table "option_sets.personal_portal___tabs" {
 	Title text
-	icon_fa text
+	"icon_fa" text
 	Subtitle text
-	page_path text
-	hero_icon text
+	"page_path" text
+	"hero_icon" text
 	hasChildren boolean
-	default_view option.user_settings_card
-	icon_default text
-	default_child option.subtabs_of_portal
+	"default_view" option.user_settings_card
+	"icon_default" text
+	"default_child" option.subtabs_of_portal
 }
 
-Table option_sets.plaiderrors {
+Table "option_sets.plaiderrors" {
 	errorCode text
 	txtButton text
 	txtDisplay text
 	hubspotValue text
 }
 
-Table option_sets.prioritylevel {
+Table "option_sets.reasons_for_suspending_company" {
+	"Hubspot Text" text
 }
 
-Table option_sets.reasons_for_suspending_company {
-	Hubspot Text text
-}
-
-Table option_sets.recursive_timing {
+Table "option_sets.recursive_timing" {
 	seconds number
 }
 
-Table option_sets.role_of_accounts_payable {
-	Is Approver boolean
-	Can Create Payment Method boolean
-	Can delete bill? boolean
-	Can Create Payment boolean
+Table "option_sets.role_of_accounts_payable" {
+	"Is Approver" boolean
+	"Can Create Payment Method" boolean
+	"Can delete bill?" boolean
+	"Can Create Payment" boolean
 }
 
-Table option_sets.role_of_kleercard {
-}
-
-Table option_sets.roles {
+Table "option_sets.roles" {
 	isAdmin boolean
-	Text Value text
-	Users they can add/edit option.roles[]
+	"Text Value" text
+	"Users they can add/edit" option.roles[]
 }
 
-Table option_sets.statement_status {
-}
-
-Table option_sets.status_of_approval_flow_step {
-}
-
-Table option_sets.status_of_approval_request {
+Table "option_sets.status_of_approval_request" {
 	terminal boolean
 }
 
-Table option_sets.status_of_bill_payee {
-	icon-hero text
+Table "option_sets.status_of_bill_payee" {
+	"icon-hero" text
 	color option.statuscolors
 	isActive boolean
-	colorText - deleted text
-	colorBadge - deleted text
+	"colorText - deleted" text
+	"colorBadge - deleted" text
 }
 
-Table option_sets.status_of_payment {
-	Paid? boolean
-	Hide from UI? boolean
-	Can edit? boolean
-	Can merge? boolean
-	Can Initiate Payment? boolean
-	Include in balance calculation boolean
-	Include in credit used Calculation boolean
+Table "option_sets.status_of_payment" {
+	"Paid?" boolean
+	"Hide from UI?" boolean
+	"Can edit?" boolean
+	"Can merge?" boolean
+	"Can Initiate Payment?" boolean
+	"Include in balance calculation" boolean
+	"Include in credit used Calculation" boolean
 }
 
-Table option_sets.status_of_payment_method_request {
+Table "option_sets.status_of_payment_method_request" {
 	complete boolean
 }
 
-Table option_sets.status_of_request {
-	Hide from filter boolean
+Table "option_sets.status_of_request" {
+	"Hide from filter" boolean
 }
 
-Table option_sets.statuscolors {
+Table "option_sets.statuscolors" {
 	light text
 	dark text
 	border text
-	fa-Icon text
+	"fa-Icon" text
 }
 
-Table option_sets.steps___form___request_card {
+Table "option_sets.steps___form___request_card" {
 	next option.steps___form___request_card
 	prev option.steps___form___request_card
 	stepNumber number
 	percentComplete number
 }
 
-Table option_sets.subscription_status {
-	value_list option.subscription_status[]
-	title_display text
+Table "option_sets.subscription_status" {
+	"value_list" option.subscription_status[]
+	"title_display" text
 }
 
-Table option_sets.subscription_tier {
+Table "option_sets.subscription_tier" {
 	number number
-	isPrepaid? boolean
-	Hubspot value text
+	"isPrepaid?" boolean
+	"Hubspot value" text
 }
 
-Table option_sets.subtabs_of_portal {
+Table "option_sets.subtabs_of_portal" {
 	view text
 	tabDisplay text
 }
 
-Table option_sets.tab_card_controls {
+Table "option_sets.tab_card_controls" {
 	mobileText text
 }
 
-Table option_sets.tab_for_card_details {
+Table "option_sets.txn___payment_status" {
+	"is_paid" boolean
 }
 
-Table option_sets.tab_vendor_details {
+Table "option_sets.type_of_account" {
+	"Int-AP-Map - deleted" text
 }
 
-Table option_sets.txn___mode {
-}
-
-Table option_sets.txn___payment_status {
-	is_paid boolean
-}
-
-Table option_sets.type_of_account {
-	Int-AP-Map - deleted text
-}
-
-Table option_sets.type_of_attachment {
-}
-
-Table option_sets.type_of_automation_rule {
-}
-
-Table option_sets.type_of_bill {
-}
-
-Table option_sets.type_of_bill_payee {
-}
-
-Table option_sets.type_of_bill_payment {
-	icon-hero text
+Table "option_sets.type_of_bill_payment" {
+	"icon-hero" text
 	isActive boolean
-	Alt Label text
-	External Label text
+	"Alt Label" text
+	"External Label" text
 }
 
-Table option_sets.type_of_card_budget {
-}
-
-Table option_sets.type_of_card_history {
-}
-
-Table option_sets.type_of_charge {
-}
-
-Table option_sets.type_of_entity {
-}
-
-Table option_sets.type_of_export {
-}
-
-Table option_sets.type_of_payment {
-}
-
-Table option_sets.type_of_request {
+Table "option_sets.type_of_request" {
 	associatedEntityType option.type_of_entity
 }
 
-Table option_sets.type_of_request_action {
+Table "option_sets.type_of_upload" {
+	"type of segment - deleted" option.company___object_to_hide
 }
 
-Table option_sets.type_of_upload {
-	type of segment - deleted option.company___object_to_hide
+Table "option_sets.type_of_vendor_request" {
+	"complete - deleted" boolean
+	"Front end display" text
 }
 
-Table option_sets.type_of_vendor_request {
-	complete - deleted boolean
-	Front end display text
-}
-
-Table option_sets.us_states {
+Table "option_sets.us_states" {
 	Code text
 }
 
-Table option_sets.user_settings_card {
+Table "option_sets.user_settings_card" {
 	description text
 	title text
 	order number
-	icon_svg text
-	page_path text
-	button_text text
-	_parent_page option.personal_portal___tabs
-	button_links option.button_link[]
+	"icon_svg" text
+	"page_path" text
+	"button_text" text
+	"_parent_page" option.personal_portal___tabs
+	"button_links" option.button_link[]
 }
 
-Table option_sets.verified_status___kyc {
-	Active? boolean
-	Marqeta Status text
+Table "option_sets.verified_status___kyc" {
+	"Active?" boolean
+	"Marqeta Status" text
 }
 
-Table option_sets.view___card_detail {
-}
-
-Table option_sets.virtual_offset_days {
+Table "option_sets.virtual_offset_days" {
 	Days number
 	Velocity text
-	Monthly Label text
+	"Monthly Label" text
 }
 
-Table option_sets.weekdays {
-	Day # number
-	weekday? boolean
+Table "option_sets.weekdays" {
+	"Day #" number
+	"weekday?" boolean
 }
 
-Table option_sets.yes___no {
+Table "option_sets.yes___no" {
 	value boolean
 }
 
-Table option_sets.yes___no0 {
+Table "option_sets.yes___no0" {
 	value boolean
 	countMax number
 	countMin number
