@@ -1,4 +1,6 @@
-module.exports = async (page, result) => {
+let appquery
+
+module.exports = async (page) => {
     const db = await page.evaluate(() => {
         const data = appquery.custom_types() || [];
         const types = [];
@@ -50,7 +52,7 @@ module.exports = async (page, result) => {
                 (name = {
                     name: name,
                     path: item.json.__path,
-                    attributes: attributes,
+                    fields: attributes,
                     values: values,
                 })
             );

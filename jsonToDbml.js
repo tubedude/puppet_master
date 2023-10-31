@@ -17,6 +17,7 @@ const jsonToDbml = (db) => {
 
         // iterate through each field and create dbml fields
         item.fields.forEach((field) => {
+			if (field.name.includes("- deleted")) return
             // handle list types
             let type = field.type || "";
             let refDirection = "-";
@@ -44,28 +45,30 @@ const jsonToDbml = (db) => {
     });
 
     db.option_sets.forEach((item) => {
-        if (item.attributes.length === 0) return;
+        if (item.fields.length === 0) return;
         dbdiagram += `Table ${quoteIfNeeded(item.path)} {`;
-        item.attributes.forEach((attribute) => {
+		dbdiagram += `\n\tDisplay text`
+        item.fields.forEach((field) => {
+			if (field.name.includes("- deleted")) return
             // handle list types
-            let type = attribute.type;
+            let type = field.type;
             let refDirection = "-";
             if (
-                attribute.type.includes("list.") &&
-                attribute.type.includes("custom.")
+                field.type.includes("list.") &&
+                field.type.includes("custom.")
             ) {
-                type = attribute.type.replace(/list\.custom\./g, "");
+                type = field.type.replace(/list\.custom\./g, "");
                 refDirection = ">";
             }
             if (
-                attribute.type.includes("list.") &&
-                !attribute.type.includes("custom.")
+                field.type.includes("list.") &&
+                !field.type.includes("custom.")
             ) {
-                type = attribute.type.replace(/list\./g, "");
+                type = field.type.replace(/list\./g, "");
                 type += `[]`;
             }
             // TODO add [ref:]
-            dbdiagram += `\n\t${quoteIfNeeded(attribute.name)} ${type}`;
+            dbdiagram += `\n\t${quoteIfNeeded(field.name)} ${type}`;
         });
         dbdiagram += `\n}\n\n`;
     });

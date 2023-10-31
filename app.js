@@ -68,11 +68,12 @@ app.get("/generate-dbml", async (req, res) => {
 
         console.log("extracting db in json format");
         result.db = await extractBubbleData(page);
+        writeToFile(JSON.stringify(result.db), result.url, "json");
 
         console.log("Raw Data extracted. Generating DBML syntax");
         result.diagram = jsonToDbml(result.db);
 
-        await writeToFile(result.diagram, result.url);
+        writeToFile(result.diagram, result.url, "dbml");
 
         console.log("Sending DBML data response.");
         return res.status(200).json(result);
