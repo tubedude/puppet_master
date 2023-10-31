@@ -1,0 +1,2345 @@
+Table custom._application {
+	_id text [pk, unique]
+	"roleSelect - deleted" text
+	"_userPrinciple" custom.user [ref: - custom.user._id]
+	error text
+	naics text
+	"biz_ein" text
+	"biz_name" text
+	"z_biz_type - deleted" text
+	"biz_phone" text
+	"efx_error" text
+	"z - biz_inc_date - deleted" text
+	"biz_website" text
+	"biz_ein_doc" file
+	"biz_address1" text
+	"biz_address2" text
+	"biz_inc_state" text
+	"biz_industry" text
+	"applicant_role_display" text
+	"z- applicant_fn - deleted" custom.user [ref: - custom.user._id]
+	"z - applicant_ln - deleted" custom.user [ref: - custom.user._id]
+	"biz_inc_date" date
+	"date_applied" date
+	"_userApplying" custom.user [ref: - custom.user._id]
+	"applicant_dob" date
+	"applicant_ssn" text
+	"biz_address_zip" text
+	"date_approved" date
+	"date_declined" date
+	"bank_balance" number
+	"biz_address_city" text
+	"biz_address_state" text
+	"customer_source" text
+	"efx_creditReport" text
+	"applicant_address1" text
+	"biz_website_none" boolean
+	"fee_accepted_date" date
+	"_company" custom.company [ref: - custom.company._id]
+	"biz_classification" text
+	"error_unhandled" boolean
+	"fee_agreed_setup" number
+	"hubspot_contact_id" text
+	"applicant_name_full" text
+	"applicant_name_last" text
+	"date_terms_accepted" date
+	"dwolla_customer_url" text
+	"efx_creditReportPDF" file
+	"applicant_name_first" text
+	"biz_diversity_none" boolean
+	"fee_agreed_monthly" number
+	"applicant_address_zip" text
+	"hubspot_contact_email" text
+	"_address_biz" custom.address [ref: - custom.address._id]
+	"applicant_address_city" text
+	"applicant_address_state" text
+	"no_beneficial_owners" boolean
+	"#rolePrinciple" option.onboarding_role [ref: - option.onboarding_role._id]
+	"applicant_drivers_license" image
+	"_doc_ein - deleted" custom.dwolla_documents [ref: - custom.dwolla_documents._id]
+	"applicant_address2" text
+	"biz_classification_industry" text
+	"_address_applicant" custom.address [ref: - custom.address._id]
+	"_bank_account" custom.bank_account [ref: - custom.bank_account._id]
+	"biz_classification_id" text
+	"biz_classification_industry_id" text
+	"_step_current" option.onboarding_steps [ref: - option.onboarding_steps._id]
+	"z_applicant_address - deleted" geographic_address
+	"applicant_is_beneficial_owner" boolean
+	"_documents" dwolla_documents
+	"biz_diversity" option.business_identity[] [ref: - option.business_identity._id]
+	"_onboarding_status" option.onboarding_status [ref: - option.onboarding_status._id]
+	"_steps_completed" option.onboarding_steps[] [ref: - option.onboarding_steps._id]
+	"_subscription_offer" custom.subscription_type [ref: - custom.subscription_type._id]
+	"biz_entity_dwolla" option.business_type___dwolla [ref: - option.business_type___dwolla._id]
+	"_beneficial_owners" beneficial_owner
+	"biz_entity_marqeta" option.marqeta___business_type [ref: - option.marqeta___business_type._id]
+}
+
+Table custom.account {
+	_id text [pk, unique]
+	type text
+	"org_text" text
+	Code text
+	intParentID text
+	Name text
+	"Duplicate?" boolean
+	intID text
+	intParentSegmentID text
+	isSubAccount boolean
+	intName text
+	"z_Code: name (text)" text
+	"_company" custom.company [ref: - custom.company._id]
+	Active boolean
+	"_parentAccount" custom.account [ref: - custom.account._id]
+	"_parentSegment" custom.segment [ref: - custom.segment._id]
+	"type(OS)" option.type_of_account [ref: - option.type_of_account._id]
+	"z_parent" custom.organization [ref: - custom.organization._id]
+}
+
+Table custom.address {
+	_id text [pk, unique]
+	"address_1" text
+	"address_2" text
+	"address_zip" text
+	"address_city" text
+	"address_state" text
+	"address_country" text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"geo_address" geographic_address
+	"payment_method" custom.billpayee [ref: - custom.billpayee._id]
+	"_application" custom._application [ref: - custom._application._id]
+}
+
+Table custom.approval_chain {
+	_id text [pk, unique]
+	"entity_id" text
+	"date_completed" date
+	"date_requested" date
+	"_company" custom.company [ref: - custom.company._id]
+	"_request" custom.request [ref: - custom.request._id]
+	"_entity_bill" custom.bill [ref: - custom.bill._id]
+	"_requestor" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"_steps_custom" approval_step
+	"current_step" custom.approval_step [ref: - custom.approval_step._id]
+	"entity_type" option.type_of_entity [ref: - option.type_of_entity._id]
+	"_steps_final" approval_step
+	"_entity_card_request" custom.card_request [ref: - custom.card_request._id]
+}
+
+Table custom.approval_request {
+	_id text [pk, unique]
+	comment text
+	"assigned_to" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"entity_type" option.type_of_entity [ref: - option.type_of_entity._id]
+	"_approval_flow_step" custom.approval_step [ref: - custom.approval_step._id]
+	"_approval_flow" custom.approval_chain [ref: - custom.approval_chain._id]
+	status option.status_of_approval_request [ref: - option.status_of_approval_request._id]
+}
+
+Table custom.approval_step {
+	_id text [pk, unique]
+	"step_no" number
+	"is_complete" boolean
+	"assigned_to" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"_approval_flow" custom.approval_chain [ref: - custom.approval_chain._id]
+	"_approval_request" custom.approval_request [ref: - custom.approval_request._id]
+}
+
+Table custom.attachment {
+	_id text [pk, unique]
+	url text
+	file file
+	"image - deleted" image
+	"uc_uuid" text
+	description text
+	"_expense" custom.bill [ref: - custom.bill._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"_request" custom.request [ref: - custom.request._id]
+	"system_generated" boolean
+	"_transaction" custom.charge [ref: - custom.charge._id]
+	"_profile" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	type option.type_of_attachment [ref: - option.type_of_attachment._id]
+	"_application" custom._application [ref: - custom._application._id]
+	"_expense_line" custom.bill_line_item [ref: - custom.bill_line_item._id]
+	IntegrationProvider option.event_integration [ref: - option.event_integration._id]
+}
+
+Table custom.auth_control {
+	_id text [pk, unique]
+	"MCC (text) - deleted" text[]
+	"MCC Max" number
+	"MCC Min" number
+	"Name (text)" text
+	"MCC Number - deleted" number
+	"Don't Show" boolean
+	"MCC List" number[]
+	"MCC Range - deleted" number_range
+	"MCC Range" number_range
+	"Active? (yes/no)" boolean
+	"Marqeta ID (text)" text
+	"MCC Range - deleted" number_range[]
+}
+
+Table custom.automation_rule {
+	_id text [pk, unique]
+	name text
+	active boolean
+	"mcc_max" number
+	"mcc_min" number
+	"mcc_list" number[]
+	"mcc_range" number_range
+	"_company" custom.company [ref: - custom.company._id]
+	"default_account" custom.account [ref: - custom.account._id]
+	type option.type_of_automation_rule [ref: - option.type_of_automation_rule._id]
+}
+
+Table custom.bank_account {
+	_id text [pk, unique]
+	Name text
+	"acct_mask" text
+	"Plaid ID - deleted - deleted" text
+	"dwolla_id" text
+	"acct_ID" text
+	"_userUpdatedBy" custom.user [ref: - custom.user._id]
+	"plaid_access_token" text
+	"acct_name" text
+	"acct_type" text
+	"check_routing" text
+	"enable_ach" boolean
+	"plaid_expires" date
+	"plaid_item_id" text
+	"plaid_webhook" text
+	"acct_subtype" text
+	"enable_check" boolean
+	"plaid_errorCode" text
+	"check_account_no" text
+	"Institution name" text
+	"check_signer_name" text
+	"_company" custom.company [ref: - custom.company._id]
+	"check_starting_no" number
+	"_userApplication" custom._application [ref: - custom._application._id]
+}
+
+Table custom.beneficial_owner {
+	_id text [pk, unique]
+	"txt_ssn - deleted" text
+	"name_last" text
+	"meta_dob" date
+	"meta_ssn" text
+	"dwolla_url" text
+	"name_first" text
+	"meta_phone" text
+	"name_title" text
+	"dwolla_status" text
+	"_company" custom.company [ref: - custom.company._id]
+	"_address" custom.address [ref: - custom.address._id]
+	"_application" custom._application [ref: - custom._application._id]
+}
+
+Table custom.bill {
+	_id text [pk, unique]
+	notes text
+	AcctIntID text
+	carrier text
+	category text
+	"date_due" date
+	"doc_path" text
+	"date_ship" date
+	"po_number" text
+	attachment file
+	"photon_key" text
+	"vat_number" text
+	"vendor_fax" text
+	"vendor_zip" text
+	"bill_to_zip" text
+	"card_number" text
+	"vendor_city" text
+	"vendor_iban" text
+	"vendor_name" text
+	"vendor_type" text
+	"amount_tax" number
+	"amount_cashback" number
+	"bill_to_city" text
+	"bill_to_name" text
+	"date_created" date
+	"payment_date" date
+	"payment_type" text
+	"phone_number" text
+	"ship_to_name" text
+	"vendor_email" text
+	"vendor_phone" text
+	"vendor_state" text
+	"amount_tip" number
+	"bill_to_email" text
+	"bill_to_state" text
+	"currency_code" text
+	"date_exported" date
+	"document_type" text
+	"payment_terms" text
+	"remit_to_name" text
+	"account_number" text
+	"amount_total" number
+	"check_number" number
+	"date_delivered" date
+	"invoice_number" text
+	"is_exported" boolean
+	"vendor_address" text
+	"vendor_country" text
+	"vendor_website" text
+	"bill_to_address" text
+	"mark_as_paid" boolean
+	"ship_to_address" text
+	"tracking_number" text
+	"vendor_raw_name" text
+	"_user_assignedTo" custom.user [ref: - custom.user._id]
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"date_service_end" date
+	"reference_number" text
+	"remit_to_address" text
+	"vendor_bank_name" text
+	"amount_discount" number
+	"amount_shipping" number
+	"amount_subtotal" number
+	"bill_to_recipient" text
+	"vendor_abn_number" text
+	"vendor_bank_swift" text
+	"_company" custom.company [ref: - custom.company._id]
+	"bill_to_vat_number" text
+	"comments_rejection" text
+	"date_service_start" date
+	"vendor_bank_number" text
+	"all_email_addresses" text
+	type option.type_of_bill [ref: - option.type_of_bill._id]
+	"vendor_address_line" text
+	"amount_balance_due" number
+	"z - bill_to_address_city - deleted" text
+	"bill_to_address_line" text
+	"payment_display_name" text
+	status option.bill_status [ref: - option.bill_status._id]
+	"vendor_account_number" text
+	"alert_possible_duplicate" boolean
+	"_payment_method" custom.billpayee [ref: - custom.billpayee._id]
+	"_attachment_main" custom.attachment [ref: - custom.attachment._id]
+	"status_scanning_attachment" boolean
+	"_taxItems" bill_tax_item
+	"_approval_flow" custom.approval_chain [ref: - custom.approval_chain._id]
+	"Alerts Dismissed" option.alert___bills[] [ref: - option.alert___bills._id]
+	"_lineItems" bill_line_item
+	"_customFields" bill_custom_field
+	"status_approval" option.bill_approval_status [ref: - option.bill_approval_status._id]
+	"_bill_payment_items" billpaymentcharge
+	"_payment_method_type" option.type_of_bill_payment [ref: - option.type_of_bill_payment._id]
+}
+
+Table custom.bill_custom_field {
+	_id text [pk, unique]
+	name text
+	value text
+	order number
+	"_expense" custom.bill [ref: - custom.bill._id]
+}
+
+Table custom.bill_line_item {
+	_id text [pk, unique]
+	SKU text
+	date date
+	type text
+	"amount_rate" number
+	order number
+	reference text
+	"attachment - deleted" file
+	"amount_quantity" number
+	description text
+	"_expense" custom.bill [ref: - custom.bill._id]
+	"amount_tax" number
+	"amount_total" number
+	"line_number" number
+	"amount_discount" number
+	"amount_subtotal" number
+	"amount_tax_rate" number
+	"_segment1" custom.segment [ref: - custom.segment._id]
+	"_segment2" custom.segment [ref: - custom.segment._id]
+	"_segment3" custom.segment [ref: - custom.segment._id]
+	"_segment4" custom.segment [ref: - custom.segment._id]
+	"_segment5" custom.segment [ref: - custom.segment._id]
+	"_coa_account" custom.account [ref: - custom.account._id]
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"_attachment" custom.attachment [ref: - custom.attachment._id]
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+}
+
+Table custom.bill_tax_item {
+	_id text [pk, unique]
+	name text
+	base number
+	rate number
+	order number
+	total number
+	"_expense" custom.bill [ref: - custom.bill._id]
+}
+
+Table custom.billpayee {
+	_id text [pk, unique]
+	name text
+	"pay_to_email" text
+	"method_number" text
+	"dwolla_id" text
+	"z-contactLast" text
+	"date_created" date
+	"dwolla_Email" text
+	"company_name" text
+	"z-contactFirst" text
+	"z-contactPhone" text
+	"date_approved" date
+	"token_account" text
+	"token_routing" text
+	"dwolla_AcctType" text
+	"z-feesAcceptedBy" text
+	"DEP - userPaysFees - deleted" boolean
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"z-feesAcceptedDate" date
+	"z - detailsEntered - deleted" boolean
+	"dwolla_CustomerURL" text
+	"z-feesAcceptedMax" number
+	"_company" custom.company [ref: - custom.company._id]
+	"_contact" custom.contact [ref: - custom.contact._id]
+	"masked_routing" text
+	"z-feesAcceptedRate" number
+	"check_print_name_as" text
+	"masked_acct" text
+	"dwolla_url" text
+	"z-userPaysFees" boolean
+	"z-userApprovesFees" boolean
+	"user_enters_details" boolean
+	Address geographic_address
+	"check_mail_to" custom.address [ref: - custom.address._id]
+	"z-Type of Bill Payee" option.type_of_bill_payee [ref: - option.type_of_bill_payee._id]
+	"_cardType" custom.card_product [ref: - custom.card_product._id]
+	"z - Type of Bill Payment - deleted" custom.billpayment [ref: - custom.billpayment._id]
+	"z - _feesApprovedBy - deleted" option.bill_payee_options [ref: - option.bill_payee_options._id]
+	"z - _acctDetailsEnteredBy - deleted" option.bill_payee_options [ref: - option.bill_payee_options._id]
+	Status option.status_of_bill_payee [ref: - option.status_of_bill_payee._id]
+	Type option.type_of_bill_payment [ref: - option.type_of_bill_payment._id]
+	"z - Fee Approval Method - deleted" option.bill_payment_approval_method [ref: - option.bill_payment_approval_method._id]
+}
+
+Table custom.billpayment {
+	_id text [pk, unique]
+	AcctIntID text
+	"z - ACH Fee - deleted" number
+	"card_name" text
+	"dwolla_id" text
+	notes text
+	"card_token" text
+	"_card" custom.card [ref: - custom.card._id]
+	"company_name" text
+	"fee_charged" number
+	"view_count" number
+	"amount_total" number
+	"check_number" number
+	"date_initiated" date
+	"date_scheduled" date
+	"date_complete" date
+	"dwolla_funding_URL" text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"_payment_method" custom.billpayee [ref: - custom.billpayee._id]
+	"Z - this Amount - Fee - deleted" number
+	"_errors" error
+	"card_validity_period" date_range
+	"_card_type" custom.card_product [ref: - custom.card_product._id]
+	"this Amount to Recipient" number
+	"_billpayment_status" option.bill_payment_status [ref: - option.bill_payment_status._id]
+	"_views" billpaymentviews
+	"_mass_payment" custom.dwolla_mass_payment [ref: - custom.dwolla_mass_payment._id]
+	"_billpayment_type" option.type_of_bill_payment [ref: - option.type_of_bill_payment._id]
+	"_billpayment_items" billpaymentcharge
+}
+
+Table custom.billpaymentcharge {
+	_id text [pk, unique]
+	date date
+	AcctIntID text
+	amount number
+	merchant text
+	"_bill" custom.bill [ref: - custom.bill._id]
+	"_charge" custom.charge [ref: - custom.charge._id]
+	"_billPayment" custom.billpayment [ref: - custom.billpayment._id]
+}
+
+Table custom.billpaymentviews {
+	_id text [pk, unique]
+	"_payment" custom.billpayment [ref: - custom.billpayment._id]
+}
+
+Table custom.card {
+	_id text [pk, unique]
+	"_approver" custom.user [ref: - custom.user._id]
+	"_cardholder" custom.user [ref: - custom.user._id]
+	"_site" custom.site [ref: - custom.site._id]
+	"Last4 (text)" text
+	"Status (text)" text
+	isPxProgram boolean
+	"Card name" text
+	"Card type (text) - deleted" text
+	"Last4 (number) - deleted" number
+	"_coa_account" custom.account [ref: - custom.account._id]
+	"Balance - Total" number
+	"_company" custom.company [ref: - custom.company._id]
+	"Control - Expiration Date" date
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"Total - Charges" number
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"_segment1" custom.segment [ref: - custom.segment._id]
+	"_segment2 - deleted" custom.project [ref: - custom.project._id]
+	"_segment2" custom.segment [ref: - custom.segment._id]
+	"_segment3" custom.segment [ref: - custom.segment._id]
+	"_segment4" custom.segment [ref: - custom.segment._id]
+	"_segment5" custom.segment [ref: - custom.segment._id]
+	"Active? (yes/no) - deleted" boolean
+	"Control - Vehicle ID" text
+	"Balance - Available" number
+	"Control - Merchant ID" text
+	"z - Card amount (number)" number
+	"_card_request" custom.card_request [ref: - custom.card_request._id]
+	"z - Velocity window (text) - deleted" text
+	"z_coa_s4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_coa_s5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	"Control - Fuel Card?" boolean
+	"_cardType" custom.card_product [ref: - custom.card_product._id]
+	"Control - Beginning Date" date
+	"Control - Require AVS" boolean
+	"Control - Limit" number
+	"_billPayment" custom.billpayment [ref: - custom.billpayment._id]
+	"rule_coa_account_ignore" boolean
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+	"_transactions" charge
+	"Control - Time Contraints?" boolean
+	"Total - Charges this month" number
+	"Control - Specific Merchant" boolean
+	"LOGS (list)" history_log
+	"Control - Auto Receipt Disabled" boolean
+	"Control - Disable Receipt Notifications" boolean
+	"Marqeta Object - deleted" api.apiconnector2_SPU2_SPk2 [ref: - api.apiconnector2_SPU2_SPk2._id]
+	"Control - MCC Groups" auth_control
+	"Control - Day/Time" card_time_controls
+}
+
+Table custom.card_history {
+	_id text [pk, unique]
+	notes text
+	amount number
+	"_createdBy" custom.user [ref: - custom.user._id]
+	"_card" custom.card [ref: - custom.card._id]
+	cardLimitAfter number
+	cardLimitBefore number
+	"created_via_api" boolean
+	type option.type_of_card_history [ref: - option.type_of_card_history._id]
+}
+
+Table custom.card_product {
+	_id text [pk, unique]
+	Type text
+	"Name (text)" text
+	"Sort Order" number
+	"Show in UI?" boolean
+	"Marqeta ID" text
+	"Monthly Limit?" boolean
+	"Margeta ID Non AVS" text
+	"Active?" boolean
+	"Virtual (yes/no) - deleted" boolean
+	"Single Use (yes/no)" boolean
+	"#Type" option.marqeta___card_type [ref: - option.marqeta___card_type._id]
+	"#TypeOfBudget" option.type_of_card_budget [ref: - option.type_of_card_budget._id]
+}
+
+Table custom.card_request {
+	_id text [pk, unique]
+	APPROVER custom.user [ref: - custom.user._id]
+	REQUESTOR custom.user [ref: - custom.user._id]
+	vehicleID text
+	SITE custom.site [ref: - custom.site._id]
+	"allowATM?" boolean
+	"Control - fuelCard?" boolean
+	dateRequested date
+	"Status (text)" text
+	dateEnd date
+	"Supplier (text)" text
+	"_vendor - deleted" custom.vendor [ref: - custom.vendor._id]
+	"Card name" text
+	"Card Type (text) - deleted" text
+	dateStart date
+	expOffsetValue number
+	"_coa_account" custom.account [ref: - custom.account._id]
+	COMPANY custom.company [ref: - custom.company._id]
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"_request" custom.request [ref: - custom.request._id]
+	"Merchant ID (text)" text
+	"_segment1" custom.segment [ref: - custom.segment._id]
+	"_segment2" custom.segment [ref: - custom.segment._id]
+	"_segment3" custom.segment [ref: - custom.segment._id]
+	"_segment4" custom.segment [ref: - custom.segment._id]
+	"_segment5" custom.segment [ref: - custom.segment._id]
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"Control - Travel? (yes/no)" boolean
+	"Validity period (text)" text
+	"Control - RequireAVS" boolean
+	"Control - specificMerchant?" boolean
+	"Amount - ATM" number
+	"RESULTING CARD" custom.card [ref: - custom.card._id]
+	"Amount - Card" number
+	"Reason declined (text)" text
+	"Reason for card (text)" text
+	"Velocity window (text)" text
+	"z_coa_s4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_coa_s5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	"_type - deleted" option.type_of_request [ref: - option.type_of_request._id]
+	"CARD PRODUCT" custom.card_product [ref: - custom.card_product._id]
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+	"Control - Time Contraints?" boolean
+	"LOGS (list)" history_log
+	"Control - Disable Notification" boolean
+	"CONTROLS (list)" auth_control
+	"Control - Disable Auto Generated Receipt" boolean
+	"Control - Day/Time" card_time_controls
+	"Validity Period (option set)" option.virtual_offset_days [ref: - option.virtual_offset_days._id]
+}
+
+Table custom.card_share {
+	_id text [pk, unique]
+	name text
+	email text
+	notes text
+	"card_id" text
+	dateSent date
+	dateViewed date
+	isActive boolean
+	"_card" custom.card [ref: - custom.card._id]
+	"_company" custom.company [ref: - custom.company._id]
+}
+
+Table custom.card_time_controls {
+	_id text [pk, unique]
+	day number
+	Summary text
+	maxHour number
+	minHour number
+	"#maxHour" option.hours [ref: - option.hours._id]
+	"#minHour" option.hours [ref: - option.hours._id]
+	Weekday option.weekdays [ref: - option.weekdays._id]
+}
+
+Table custom.category {
+	_id text [pk, unique]
+	Code text
+	"qbo_id" text
+	"qbo_name" text
+	"parent_ref" text
+	Name text
+	isSubSegment boolean
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment" custom.segment [ref: - custom.segment._id]
+	Active boolean
+}
+
+Table custom.charge {
+	_id text [pk, unique]
+	IntID text
+	"_userApprover" custom.user [ref: - custom.user._id]
+	"heron_id" text
+	odometer text
+	"status_is_paid" boolean
+	"QB Error" text
+	"mq_token_jit" text
+	"_userCardholder" custom.user [ref: - custom.user._id]
+	"_card" custom.card [ref: - custom.card._id]
+	"merchant_id" text
+	"Site (text)" text
+	"_companySite" custom.site [ref: - custom.site._id]
+	"Complete?" boolean
+	"date_cleared" date
+	"date_settled" date
+	IntErrorCode text
+	"amount_paid" number
+	"date_exported" date
+	"mq_token_latest" text
+	"QB Desktop - ID" text
+	"QB Error Code" text
+	"Account (text)" text
+	"funding_source" text
+	"is_exported" boolean
+	"Project (text)" text
+	"Receipt (file) - deleted" file
+	"Category (text)" text
+	"Fuel Charge?" boolean
+	"ManualItems? - deleted" boolean
+	"merchant_name" text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"details_attendees" text
+	"mq_token_original" text
+	"z_coa_account" custom.account [ref: - custom.account._id]
+	"amount_of_charge" number
+	"Cardholder (text)" text
+	"_company" custom.company [ref: - custom.company._id]
+	"merchant_heron_id" text
+	"merchant_icon_uri" text
+	"merchant_logo_uri" text
+	"merchant_mcc_code - deleted" text
+	"merchant_mcc_slug" text
+	"_companyPayment" custom.payment [ref: - custom.payment._id]
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"date_posted" date
+	"QB Online - ID" text
+	"amount_authorized" number
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"merchant_name_clean" text
+	"Organization (text)" text
+	"QB Online - Status" text
+	"amount_charged_off" number
+	"merchant_website_url" text
+	"network_reference_id" text
+	"amount_tax" number
+	ItemsMode option.txn___mode [ref: - option.txn___mode._id]
+	"status_charge" option.charge_status [ref: - option.charge_status._id]
+	"z_coa_s4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_coa_s5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	"_statement" custom.statements [ref: - custom.statements._id]
+	"details_purpose" text
+	"disable_auto_receipt" boolean
+	"merchant_mcc_description" text
+	"mq_token_complete" text
+	"z - Receipts (list of files) - deleted" file
+	"deleted_attachments - deleted" custom.attachment [ref: - custom.attachment._id]
+	"merchant_mcc_code" text
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+	"_attachments" attachment
+	"Receipts (list of files)" file[]
+	"_transactionItems" charge_item
+	"status_payment" option.txn___payment_status [ref: - option.txn___payment_status._id]
+	"_PartnerTransction" custom.partnertransaction1 [ref: - custom.partnertransaction1._id]
+}
+
+Table custom.charge_csv_download_settings {
+	_id text [pk, unique]
+	JSON text
+	"Header 01" text
+	delimiter text
+	"Header 02" text
+	"Header 03" text
+	"Header 04" text
+	"Header 05" text
+	"Header 06" text
+	"Header 07" text
+	"Header 08" text
+	"Header 09" text
+	"Header 10" text
+	"Header 11" text
+	"Header 12" text
+	"Header 13" text
+	"Header 14" text
+	"Header 15" text
+	"Header 16" text
+	"Header 17" text
+	"Header 18" text
+	"Header 19" text
+	"Header 20" text
+	"Header 21" text
+	"Header 22" text
+	"Header 23" text
+	"Header 24" text
+	"Header 25" text
+	"Header 26" text
+	"Header 27" text
+	"Header 28" text
+	"Header 29" text
+	"Header 30" text
+	"Header 31" text
+	"Header 32" text
+	modifiedBy custom.user [ref: - custom.user._id]
+	"is_testing" boolean
+	COMPANY custom.company [ref: - custom.company._id]
+	"inverse_amount" boolean
+	"inverse_offset" boolean
+	"transform_data" boolean
+	WEBSITE custom.website [ref: - custom.website._id]
+	"offset_account_column" text
+	"offset_account_value" text
+	"include_offset_row" boolean
+	"offset_groupby_column" text
+	type option.type_of_export [ref: - option.type_of_export._id]
+	"Field 01" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 02" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 03" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 04" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 05" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 06" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 07" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 08" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 09" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 10" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 11" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 12" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 13" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 14" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 15" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 16" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 17" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 18" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 19" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 20" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 21" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 22" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 23" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 24" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 25" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 26" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 27" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 28" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 29" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 30" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 31" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"Field 32" option.charge_item_fields [ref: - option.charge_item_fields._id]
+	"include_offset_in_amount_col" boolean
+	"_columns" export_settings_line
+}
+
+Table custom.charge_item {
+	_id text [pk, unique]
+	Memo text
+	Site text
+	Account text
+	Company text
+	"Main?" boolean
+	Project text
+	Category text
+	Merchant text
+	"details_attendees" text
+	Cardholder text
+	"_userCardholder" custom.user [ref: - custom.user._id]
+	"_card" custom.card [ref: - custom.card._id]
+	Complete boolean
+	"date_posted" text
+	"_companySite" custom.site [ref: - custom.site._id]
+	"Account Code" text
+	"Account Name" text
+	Organization text
+	"Project Code" text
+	"Project Name" text
+	"Category code" text
+	"Category name" text
+	"_transaction" custom.charge [ref: - custom.charge._id]
+	"details_business_purpose" text
+	"QBO - Account ID" text
+	"_coa_account" custom.account [ref: - custom.account._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"Organization Code" text
+	"Organization Name" text
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"date_cleared" text
+	"QBD - Account Name" text
+	"QBO - Account Name" text
+	"_segment1" custom.segment [ref: - custom.segment._id]
+	"_segment2" custom.segment [ref: - custom.segment._id]
+	"_segment3" custom.segment [ref: - custom.segment._id]
+	"_segment4" custom.segment [ref: - custom.segment._id]
+	"_segment5" custom.segment [ref: - custom.segment._id]
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"Amount - This Item" number
+	"z_coa_s4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_coa_s5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	"Amount - Charge Total" number
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+}
+
+Table custom.coa_segment_3 {
+	_id text [pk, unique]
+	Code text
+	"qbo_id" text
+	"qbo_name" text
+	"parent_ref" text
+	Name text
+	isSubSegment boolean
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment" custom.segment [ref: - custom.segment._id]
+	Active boolean
+}
+
+Table custom.coa_segment_4 {
+	_id text [pk, unique]
+	Code text
+	"qbo_id" text
+	"qbo_name" text
+	Name text
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment" custom.segment [ref: - custom.segment._id]
+	Active boolean
+}
+
+Table custom.comment {
+	_id text [pk, unique]
+	body text
+	"_thread" custom.thread [ref: - custom.thread._id]
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"_request" custom.request [ref: - custom.request._id]
+	"system_generated" boolean
+	"type_of_entity" option.type_of_entity [ref: - option.type_of_entity._id]
+	"type_of_request_action" option.type_of_request_action [ref: - option.type_of_request_action._id]
+}
+
+Table custom.company {
+	_id text [pk, unique]
+	id text
+	"biz_dba" text
+	"m_naics" text
+	address1 text
+	address2 text
+	"QBD - id" text
+	"dwolla_customer_url" text
+	"m_revenue_annual" text
+	MidDeskBizID text
+	"address_zip" text
+	"new JIT" boolean
+	"address_city" text
+	"biz_phone" text
+	"biz_legal_name" text
+	"address_state" text
+	"cash_back_rate" number
+	"credit_used" number
+	"logo_img" image
+	"💰 payment_wf_id" text
+	"credit_limit" number
+	inPxProgram boolean
+	"m_stock_symbol" text
+	MidDeskBizCreateDate date
+	"QBD - fullPath" text
+	"⚙️ segment_4_name" text
+	"⚙️ segment_5_name" text
+	"⚙️ account_name" text
+	"⚙️ segment_2_name" text
+	AmzBusLastFetchThruDate date
+	"⚙️ segment_3_name" text
+	"bill_pay_ach_max" number
+	"m_markets_served" text
+	"m_stock_exchange" text
+	sendToBancorp boolean
+	"bill_pay_ach_rate" number
+	"biz_taxpayer_id" text
+	"current_balance" number
+	"💰 date_last_payment" date
+	"_admin_users" user[]
+	"bank_connected" boolean
+	"billing_date_start" date
+	"dwolla_retry_url" text
+	"hubspot_contact_id" text
+	"status_active" boolean
+	"m_no_of_employees" number
+	"QBD - userID" text
+	"QB Online - RealmID" text
+	"⚙️ segment_1_name" text
+	"⚙️ segment_3_sync" boolean
+	"⚙️ segment_4_sync" boolean
+	"2fa_validity_period" number
+	"hubspot_contact_email" text
+	"QB Desktop - Verified" date
+	"QB Online - Vendor ID" text
+	"AmzBus - OAuth" custom.oauth [ref: - custom.oauth._id]
+	AmzBusLastFetchBatchID text
+	"biz_date_established" date
+	"QB Desktop - Connected" date
+	"QBD - companyName" text
+	"QB Online - Account ID" text
+	"AmzBusFeatureActive?" boolean
+	MidDeskBizCreateJSONRaw text
+	"QB Desktop - AgentToken" text
+	"status_report_credit" boolean
+	"biz_state_incorporated" text
+	"Need Beneficial Owner" boolean
+	"QBD - endpointId" text
+	"QB Desktop - Vendor Name" text
+	"QB Online - Access Token - deleted" text
+	"QB Online - Account Name" text
+	"QB Online - Importing" boolean
+	"dwolla_need_document" boolean
+	"m_percent_rev_out_of_US" number
+	"QB Desktop - Account Name" text
+	"QB Online - Oauth" custom.oauth [ref: - custom.oauth._id]
+	"QB Online - Refresh Token - deleted" text
+	"m_estimate_monthly_spend" number
+	"_bank_acct_active" custom.bank_account [ref: - custom.bank_account._id]
+	"_payment_methods" billpayee
+	"biz_address" geographic_address
+	"restrict_jit_validations" boolean
+	"_subscription" custom.subscription [ref: - custom.subscription._id]
+	AmzBusDefaultVendor custom.vendor [ref: - custom.vendor._id]
+	"dwolla_funding_source_url" text
+	"⛔️ Admin - Address - deleted" geographic_address
+	"QB Online - Last Imported" date
+	"_bank_checking" custom.bank_account [ref: - custom.bank_account._id]
+	"logo_show_virtual_card" boolean
+	"_logs_history" history_log
+	"billing_period" option.billing_period [ref: - option.billing_period._id]
+	"_user_application" custom._application [ref: - custom._application._id]
+	"dwolla_need_controller" boolean
+	"QB Online - Access Token Expires - deleted" date
+	"_zzIntegrationProvider" custom.integration [ref: - custom.integration._id]
+	"CATEGORIES (list) - deleted" category
+	"QB Online - Refresh Token Expires - deleted" date
+	"_IntegrationAccting" custom.integration1 [ref: - custom.integration1._id]
+	"_settings" custom.company_preferences [ref: - custom.company_preferences._id]
+	"_payeeSettings - deleted" custom.companypayeesettings [ref: - custom.companypayeesettings._id]
+	"_subscription_tier" option.subscription_tier [ref: - option.subscription_tier._id]
+	"Marqeta Object - deleted" api.apiconnector2_SPU2_SPh2 [ref: - api.apiconnector2_SPU2_SPh2._id]
+	"_bank_acct_all" bank_account
+	"_dwolla_status" option.dwolla_status_of_company [ref: - option.dwolla_status_of_company._id]
+	"Object to Hide - deleted" option.company___object_to_hide [ref: - option.company___object_to_hide._id]
+	"_dwolla_documents" dwolla_documents
+	"_segments_to_hide" option.company___object_to_hide[] [ref: - option.company___object_to_hide._id]
+	"_dwolla_biz_type" option.business_type___dwolla [ref: - option.business_type___dwolla._id]
+	"_zzacct_integration_type" option.integration_options [ref: - option.integration_options._id]
+	"_marqeta_biz_type" option.marqeta___business_type [ref: - option.marqeta___business_type._id]
+	"_marqeta_biz_status" option.verified_status___kyc [ref: - option.verified_status___kyc._id]
+	"_charge_export" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+}
+
+Table custom.company_preference_bill_management {
+	_id text [pk, unique]
+	"forward_email" text
+	"default_approver" custom.user [ref: - custom.user._id]
+	"default_assignee" custom.user [ref: - custom.user._id]
+	"forward_username" text
+	"line_col_rate" boolean
+	"access_granted" boolean
+	"line_col_total" boolean
+	"default_approver_2" custom.user [ref: - custom.user._id]
+	"line_col_account" boolean
+	"line_col_project" boolean
+	"line_col_category" boolean
+	"line_col_discount" boolean
+	"line_col_quantity" boolean
+	"line_col_tax" boolean
+	"line_col_organization" boolean
+	"custom_fields" custom_field
+	"_companySetting" custom.company_preferences [ref: - custom.company_preferences._id]
+	"default_assignee_profile" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"default_approver_1_profile" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"default_approver_2_profile" custom.linkedroledata [ref: - custom.linkedroledata._id]
+}
+
+Table custom.company_preferences {
+	_id text [pk, unique]
+	"_company" custom.company [ref: - custom.company._id]
+	"coa_s1_auto_assign" boolean
+	"notify_receipt_push" boolean
+	"disable_auto_receipt" boolean
+	"notify_receipt_email" boolean
+	"notify_receipt_lookback" number
+	"notify_receipt_threshold" number
+	"bill_custom_fields - deleted" custom_field
+	"_export_bill" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+	"_export_charge" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+	"_bill_payment" custom.company_preference_bill_management [ref: - custom.company_preference_bill_management._id]
+}
+
+Table custom.company_transition {
+	_id text [pk, unique]
+	type text
+	status text
+	"_userCreatedBy" custom.user [ref: - custom.user._id]
+	"date_initiated" date
+	"completed_bubble - deleted" date
+	"completed_hubspot" date
+	"completed_marqeta" date
+	"_company" custom.company [ref: - custom.company._id]
+	"completed_kleercard" date
+	"completed_riskvision" date
+}
+
+Table custom.contact {
+	_id text [pk, unique]
+	email text
+	phone text
+	"name_last" text
+	"name_first" text
+	"phone_formatted" text
+	address geographic_address
+	"_parent_vendor" custom.vendor [ref: - custom.vendor._id]
+}
+
+Table custom.custom_field {
+	_id text [pk, unique]
+	name text
+	type text
+	order number
+	isActive boolean
+	"_company" custom.company [ref: - custom.company._id]
+}
+
+Table custom.department {
+	_id text [pk, unique]
+	name text
+	modifiedBy custom.user [ref: - custom.user._id]
+	description text
+	isActive boolean
+	isPublic boolean
+	"display_name" text
+	"_company" custom.company [ref: - custom.company._id]
+	"_approver_1" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"_approver_2" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"_assignee" custom.linkedroledata [ref: - custom.linkedroledata._id]
+}
+
+Table custom.download {
+	_id text [pk, unique]
+	file file
+	"file_name" text
+	"requested_by" custom.user [ref: - custom.user._id]
+	"send_to_name" text
+	"send_to_email" text
+	"export_json" text[]
+	"data_bills" bill
+	"data_charges" charge
+	"_export" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+}
+
+Table custom.dwolla_documents {
+	_id text [pk, unique]
+	Status text
+	"Dwolla ID" text
+	Error text[]
+	"_company" custom.company [ref: - custom.company._id]
+	"_attachment" custom.attachment [ref: - custom.attachment._id]
+	"_application" custom._application [ref: - custom._application._id]
+	Type option.dwolla___document_types [ref: - option.dwolla___document_types._id]
+	"Failure Reason" option.dwolla___document_failure_reasons [ref: - option.dwolla___document_failure_reasons._id]
+}
+
+Table custom.dwolla_mass_payment {
+	_id text [pk, unique]
+	status text
+	total number
+	"dwolla_url" text
+	complete boolean
+	"date_created" date
+	"date_completed" date
+	"source_account" text
+	"idempotency_key" text
+	"_company" custom.company [ref: - custom.company._id]
+	"dwolla_correlation_id" text
+	"_billpayments" billpayment
+}
+
+Table custom.email_verification_request {
+	_id text [pk, unique]
+	User custom.user [ref: - custom.user._id]
+	Email text
+}
+
+Table custom.error {
+	_id text [pk, unique]
+	date date
+	message text
+	"entity_id" text
+}
+
+Table custom.event_trigger {
+	_id text [pk, unique]
+	"_user" custom.user [ref: - custom.user._id]
+	"Error?" boolean
+	ErrorDetail text
+	ObjectID text
+	DateTrigger date
+	Description text
+	"???errors" text[]
+	DateComplete date
+	"_Bill" custom.bill [ref: - custom.bill._id]
+	"_Vendor" custom.vendor [ref: - custom.vendor._id]
+	"???Mode - deleted" option.event_type [ref: - option.event_type._id]
+	"_Company" custom.company [ref: - custom.company._id]
+	"_Transaction" custom.charge [ref: - custom.charge._id]
+	"_Billpay" custom.billpayment [ref: - custom.billpayment._id]
+	"Class - deleted" option.integration_class [ref: - option.integration_class._id]
+	"_IntegrationProvider" custom.integration [ref: - custom.integration._id]
+	"_Application" custom._application [ref: - custom._application._id]
+	EventRoute option.eventdirective [ref: - option.eventdirective._id]
+	RelatedEvent custom.event_trigger [ref: - custom.event_trigger._id]
+	"???Provider - deleted" option.event_integration [ref: - option.event_integration._id]
+	EventOperation option.event_trigger_type [ref: - option.event_trigger_type._id]
+	"event_action - deleted" option.event_trigger_action [ref: - option.event_trigger_action._id]
+	EventType option.event_trigger_object [ref: - option.event_trigger_object._id]
+	"???event_actions" option.event_trigger_action[] [ref: - option.event_trigger_action._id]
+	"???event_integrations" option.event_integration[] [ref: - option.event_integration._id]
+}
+
+Table custom.export_settings_line {
+	_id text [pk, unique]
+	order number
+	sanitize boolean
+	"column_value_static" text
+	"column_name" text
+	"column_value_id" text
+	isFixedValue boolean
+	"_parent" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+	"column_field_name" option.charge_item_fields [ref: - option.charge_item_fields._id]
+}
+
+Table custom.faq {
+	_id text [pk, unique]
+	URL text
+	Question text
+	"Answer/Description" text
+	"Show?" boolean
+	"_type" option.faq_type [ref: - option.faq_type._id]
+}
+
+Table custom.history_log {
+	_id text [pk, unique]
+	User custom.user [ref: - custom.user._id]
+	"Action (text)" text
+	"OBJECT - USER" custom.user [ref: - custom.user._id]
+	"Object type (text)" text
+	"OBJECT - CARD" custom.card [ref: - custom.card._id]
+	"OBJECT - COMPANY" custom.company [ref: - custom.company._id]
+	"OBJECT - REQUEST" custom.card_request [ref: - custom.card_request._id]
+	"Company (privacy rules)" custom.company [ref: - custom.company._id]
+}
+
+Table custom.import {
+	_id text [pk, unique]
+	"is_processing" boolean
+	"entity_type" text
+	"import_from" text
+	"items_count" number
+	"count_processed" number
+	"_company" custom.company [ref: - custom.company._id]
+	errors error
+}
+
+Table custom.integration {
+	_id text [pk, unique]
+	Name text
+	BaseURL text
+	"AB-MatchDays" number
+	AlertSlackUrlSuffix text
+	"_ccholding - deleted" custom.account [ref: - custom.account._id]
+	"_account - deleted" custom.account [ref: - custom.account._id]
+	Class option.integration_class [ref: - option.integration_class._id]
+	"_segment1 - deleted" custom.segment [ref: - custom.segment._id]
+	"_segment2 - deleted" custom.segment [ref: - custom.segment._id]
+	"_segment3 - deleted" custom.segment [ref: - custom.segment._id]
+	"_segment4 - deleted" custom.segment [ref: - custom.segment._id]
+	"_segment5 - deleted" custom.segment [ref: - custom.segment._id]
+	"AB-AlertTransactionCount" number
+	"AB-FetchStarOverlap(Hours)" number
+	IntegrationProviderCode option.event_integration [ref: - option.event_integration._id]
+}
+
+Table custom.integration1 {
+	_id text [pk, unique]
+	ClientID text
+	"Valid? - deleted" boolean
+	"Active?" boolean
+	PrivateKey text
+	AcctingLastImport date
+	Company custom.company [ref: - custom.company._id]
+	AcctingDefaultFundID text
+	OAuth custom.oauth [ref: - custom.oauth._id]
+	"AcctingImporting?" boolean
+	AcctingDefaultCCID text
+	AcctingDefaultVendorID text
+	AcctingDefaultCashAcct text
+	AcctingDefaultPayablesID text
+	Class option.integration_class [ref: - option.integration_class._id]
+	IntegrationProvider custom.integration [ref: - custom.integration._id]
+	IntegrationProviderCode option.event_integration [ref: - option.event_integration._id]
+}
+
+Table custom.jit_requests {
+	_id text [pk, unique]
+	Header text
+	"Validate - Card Status" text
+	Amount number
+	Response text
+	"JIT Token Original" text
+	"JIT Token" text
+	Card custom.card [ref: - custom.card._id]
+	"Charge Token" text
+	"Request Method" text
+	"Merchant Country" text
+	"Actual - Risk Score" text
+	"Validate - Risk Score" text
+	"Validate - MCC Controls" text
+	"Validate - Authorization" text
+	"Validate - Time Controls" text
+	"Validate - Funding Method" text
+	"Validate - Validity Dates" text
+	"Validate - Card Limit" text
+	"Validate - Merchant Specific" text
+	"Validate - Company Credit Limit" text
+}
+
+Table custom.linkedroledata {
+	_id text [pk, unique]
+	"_User" custom.user [ref: - custom.user._id]
+	"_approver" custom.user [ref: - custom.user._id]
+	"_company_site" custom.site [ref: - custom.site._id]
+	"role_user" option.roles [ref: - option.roles._id]
+	"amount_card_approval" number
+	"amount_card_create" number
+	"z_coa_s3" custom.category [ref: - custom.category._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment1" custom.segment [ref: - custom.segment._id]
+	"_segment2" custom.segment [ref: - custom.segment._id]
+	"_segment3" custom.segment [ref: - custom.segment._id]
+	"_segment4" custom.segment [ref: - custom.segment._id]
+	"_segment5" custom.segment [ref: - custom.segment._id]
+	"show_help_banner" boolean
+	"_coa_account" custom.account [ref: - custom.account._id]
+	"z_coa_s2" custom.project [ref: - custom.project._id]
+	"z_coa_s1" custom.organization [ref: - custom.organization._id]
+	"z_coa_s4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_coa_s5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	"role_ap" option.role_of_accounts_payable [ref: - option.role_of_accounts_payable._id]
+}
+
+Table custom.log___auth_requests {
+	_id text [pk, unique]
+	type text
+	token text
+	amount text
+	status text
+	card custom.card [ref: - custom.card._id]
+	"funding_source" text
+	charge custom.charge [ref: - custom.charge._id]
+	"token - Preceding" text
+	"amount (number)" number
+	"JIT Token - Original" text
+	"network_reference_id" text
+}
+
+Table custom.log___error {
+	_id text [pk, unique]
+	api text
+	page text
+	"_user" custom.user [ref: - custom.user._id]
+	"error_message" text
+	"system_txt" text
+	"page_tab" text
+	"error_code" text
+	system option.errorsystem [ref: - option.errorsystem._id]
+	priority option.prioritylevel [ref: - option.prioritylevel._id]
+}
+
+Table custom.log_general {
+	_id text [pk, unique]
+	type text
+	token text
+	status text
+	"data_type" text
+	"record_token" text
+}
+
+Table custom.new {
+	_id text [pk, unique]
+}
+
+Table custom.oauth {
+	_id text [pk, unique]
+	"Valid?" boolean
+	"Error Code" text
+	"Error Desc" text
+	Code text
+	"Revoked?" boolean
+	"Access Token" text
+	"Raw Response" text
+	"Refresh Life" text
+	"Access Life" number
+	"Refresh Token" text
+	"Access Expires" date
+	"Refresh Expires" date
+	Company custom.company [ref: - custom.company._id]
+	Type option.oauth_type [ref: - option.oauth_type._id]
+	"Provider(Deprecated)" option.oauth_provider [ref: - option.oauth_provider._id]
+	Integration custom.integration1 [ref: - custom.integration1._id]
+	IntegrationProvider custom.integration [ref: - custom.integration._id]
+	IntegrationProviderCode option.event_integration [ref: - option.event_integration._id]
+}
+
+Table custom.organization {
+	_id text [pk, unique]
+	Code text
+	Name text
+	"Code: name" text
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment" custom.segment [ref: - custom.segment._id]
+	Active boolean
+}
+
+Table custom.palette_colors {
+	_id text [pk, unique]
+	Type text
+	Color text
+}
+
+Table custom.partnertransaction1 {
+	_id text [pk, unique]
+	"payerEmail - deleted" text
+	RawJSONBatch text
+	amount number
+	feedDate date
+	RawJSON text
+	payerEmail text
+	FetchDate date
+	payerName text
+	buyerEmail text
+	buyerName text
+	FetchBatchID text
+	"InvoicePDF - deleted" file
+	"Matched?" boolean
+	"_card" custom.card [ref: - custom.card._id]
+	transactionId text
+	"legalEntityName - deleted" text
+	transactionblob text
+	transactionDate date
+	transactionType text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"InvoiceGenAttempted?" boolean
+	"_companySite" custom.site [ref: - custom.site._id]
+	"_transaction - deleted" custom.charge [ref: - custom.charge._id]
+	paymentInstrumentType text
+	"_transaction" custom.charge [ref: - custom.charge._id]
+	"_attachment" custom.attachment [ref: - custom.attachment._id]
+	Provider option.oauth_provider [ref: - option.oauth_provider._id]
+	paymentInstrumentLast4Digits text
+	"LineItems(API) - deleted" api.apiconnector2_aArjt0_aArli1_transactionLineItems [ref: - api.apiconnector2_aArjt0_aArli1_transactionLineItems._id]
+	"APILineItems - deleted" api.apiconnector2_aArjt0_aArli1_transactionLineItems [ref: - api.apiconnector2_aArjt0_aArli1_transactionLineItems._id]
+}
+
+Table custom.partnertransactionitems {
+	_id text [pk, unique]
+	"tax - deleted" number
+	unspsc text
+	orderId text
+	"RawJSON - deleted" text
+	"asin/SKU" text
+	shipmentId text
+	unitPrice number
+	FetchBatchID text
+	productTitle text
+	shipmentDate date
+	totalAmount number
+	itemQuantity number
+	"orderLineItemId - deleted" text
+	"transactionblob - deleted" text
+	orderLineItemId text
+	"shippingCharge - deleted" number
+	"merchantLegalName - deleted" text
+	"principalAmount - deleted" number
+	"_company" custom.company [ref: - custom.company._id]
+	"shipmentDate(Text) - deleted" text
+	purchaseOrderNumber text
+	"transactionId(from parent)" text
+	"_PartnerTransaction" custom.partnertransaction1 [ref: - custom.partnertransaction1._id]
+}
+
+Table custom.payment {
+	_id text [pk, unique]
+	Notes text
+	"Last 4" text
+	DwollaID text
+	"date_paid" date
+	"Payment ID" text
+	"z_Billing End" date
+	"amount_paid" number
+	"amount_used" number
+	"z_Billing Start" date
+	"Customer Name" text
+	"failed Reason" text
+	"is_deleted" boolean
+	"_parent" custom.payment [ref: - custom.payment._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"amount_remaining" number
+	"amount_paid_draft" number
+	"process_in_dwolla" boolean
+	"Amount Suggested" number
+	"_statement" custom.statements [ref: - custom.statements._id]
+	"CHARGES (list) - deleted" custom.charge [ref: - custom.charge._id]
+	"_paymentLines" payment_item
+	Status option.status_of_payment [ref: - option.status_of_payment._id]
+	"_bank_account" custom.bank_account [ref: - custom.bank_account._id]
+	"CHARGES (list)" charge
+	"_type of payment" option.type_of_payment [ref: - option.type_of_payment._id]
+	"_paymentLinesDraft" payment_item
+	"_paymentLinesToDelete" payment_item
+}
+
+Table custom.payment_item {
+	_id text [pk, unique]
+	date date
+	isDraft boolean
+	isDeleted boolean
+	"amount_paid" number
+	"_company" custom.company [ref: - custom.company._id]
+	"_payment" custom.payment [ref: - custom.payment._id]
+	"amount_paid_draft" number
+	"_statement" custom.statements [ref: - custom.statements._id]
+}
+
+Table custom.payment_method_request {
+	_id text [pk, unique]
+	name text
+	"date_sent" date
+	"sender_name" text
+	"recipient_name" text
+	"sender_email" text
+	"recipient_email" text
+	"masked_account" text
+	"masked_routing" text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"date_last_viewed" date
+	"funding_source_id" text
+	"_company" custom.company [ref: - custom.company._id]
+	"funding_source_url" text
+	"_type" option.type_of_vendor_request [ref: - option.type_of_vendor_request._id]
+	"_status" option.status_of_payment_method_request [ref: - option.status_of_payment_method_request._id]
+}
+
+Table custom.payment_transition {
+	_id text [pk, unique]
+	date date
+	status text
+	"return_code" text
+	"return_explanation" text
+	"_payment" custom.payment [ref: - custom.payment._id]
+	"return_description" text
+}
+
+Table custom.project {
+	_id text [pk, unique]
+	"qbo_id" text
+	"qbo_name" text
+	Code text
+	Name text
+	"_account" custom.account [ref: - custom.account._id]
+	"Code: name" text
+	"_company" custom.company [ref: - custom.company._id]
+	"_segment" custom.segment [ref: - custom.segment._id]
+	Active boolean
+}
+
+Table custom.reimbursement_request {
+	_id text [pk, unique]
+	"date_due" date
+	"line_items" text
+	"_vendor" custom.vendor [ref: - custom.vendor._id]
+	"requested_by_name - deleted" text
+	"_company" custom.company [ref: - custom.company._id]
+	"_request" custom.request [ref: - custom.request._id]
+	form custom.request_link [ref: - custom.request_link._id]
+	"_department - deleted" custom.department [ref: - custom.department._id]
+}
+
+Table custom.request {
+	_id text [pk, unique]
+	memo text
+	"_xano_id" text
+	"date_requested" date
+	"date_completed" date
+	"requested_by_name" text
+	"_company" custom.company [ref: - custom.company._id]
+	"amount_requested" number
+	"requested_by_email" text
+	"requested_by_phone" text
+	type option.type_of_request [ref: - option.type_of_request._id]
+	"requested_by_payto_name" text
+	"_approval_rule" custom.department [ref: - custom.department._id]
+	status option.status_of_request [ref: - option.status_of_request._id]
+	"user_requested" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"user_assigned" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"_approval_flow" custom.approval_chain [ref: - custom.approval_chain._id]
+	"_entity_card_request" custom.card_request [ref: - custom.card_request._id]
+	"_entity_request_reimbursement" custom.reimbursement_request [ref: - custom.reimbursement_request._id]
+}
+
+Table custom.request_link {
+	_id text [pk, unique]
+	name text
+	title text
+	subTitle text
+	"memo_hint" text
+	"xano_id" number
+	"memo_label" text
+	modifiedBy custom.user [ref: - custom.user._id]
+	description text
+	isActive boolean
+	"mileage_on" boolean
+	"mileage_rate" number
+	"_company" custom.company [ref: - custom.company._id]
+	"approval_rule_label" text
+	"optional_fields_json" text
+	"optional_fields" text[]
+	"_approval_rule" custom.department [ref: - custom.department._id]
+	"_coa_segments_to_show" option.company___object_to_hide[] [ref: - option.company___object_to_hide._id]
+}
+
+Table custom.segment {
+	_id text [pk, unique]
+	code text
+	name text
+	intID text
+	intName text
+	"code:name" text
+	intParentID text
+	isActive boolean
+	isSubSegment boolean
+	"_company" custom.company [ref: - custom.company._id]
+	"z_segment2" custom.project [ref: - custom.project._id]
+	"z_segment3" custom.category [ref: - custom.category._id]
+	"_parentAccount" custom.account [ref: - custom.account._id]
+	"_parentSegment" custom.segment [ref: - custom.segment._id]
+	"z_segment1" custom.organization [ref: - custom.organization._id]
+	"z_segment4" custom.coa_segment_3 [ref: - custom.coa_segment_3._id]
+	"z_segment5" custom.coa_segment_4 [ref: - custom.coa_segment_4._id]
+	type option.company___object_to_hide [ref: - option.company___object_to_hide._id]
+}
+
+Table custom.site {
+	_id text [pk, unique]
+	"Name (text)" text
+	"TOP APPROVER " custom.user [ref: - custom.user._id]
+	COMPANY custom.company [ref: - custom.company._id]
+	"ADMINS (list)" user[]
+	"Active? (yes/no)" boolean
+	"EMPLOYEES (list)" user[]
+	"Location (geo)" geographic_address
+}
+
+Table custom.statements {
+	_id text [pk, unique]
+	"amount_total" number
+	"date_due" date
+	"billing_end" date
+	"date_created" date
+	"statement_id" text
+	"billing_start" date
+	"is_deleted" boolean
+	"amount_balance_due" number
+	"_company" custom.company [ref: - custom.company._id]
+	"_payment" custom.payment [ref: - custom.payment._id]
+	"_status" option.statement_status [ref: - option.statement_status._id]
+	"_transactions" charge
+	"DEP_payment_lines - deleted" billpaymentcharge
+}
+
+Table custom.subofferoption {
+	_id text [pk, unique]
+	textRaw text
+	sortNum number
+	textMerged text
+	"_subscription_offer" custom.subscription_type [ref: - custom.subscription_type._id]
+}
+
+Table custom.subscription {
+	_id text [pk, unique]
+	name text
+	"fee_setup" number
+	"fee_monthly" number
+	"credit_limit" number
+	"date_cancelled" date
+	"cashback_rate" number
+	"_company" custom.company [ref: - custom.company._id]
+	"_tier" option.subscription_tier [ref: - option.subscription_tier._id]
+	"billing_period" option.billing_period [ref: - option.billing_period._id]
+	"_user_application" custom._application [ref: - custom._application._id]
+	"_subscription_offer" custom.subscription_type [ref: - custom.subscription_type._id]
+	"_subscription_status" option.subscription_status [ref: - option.subscription_status._id]
+}
+
+Table custom.subscription_type {
+	_id text [pk, unique]
+	"txt_name" text
+	"fee_setup" number
+	"txt_title" text
+	"is_active" boolean
+	"show_name" boolean
+	"balance_max" number
+	"balance_min" number
+	"fee_monthly" number
+	"txt_tier_level" text
+	"cashback_rate_weekly" number
+	"credit_limit_max" number
+	"credit_limit_amount" number
+	"fee_setup_description" text
+	"cashback_rate_biweekly" number
+	"credit_limit_rate" number
+	"fee_monthly_description" text
+	"credit_limit_extension_eligibility" number
+	"_options" subofferoption
+	"_subscription_tier_level" option.subscription_tier [ref: - option.subscription_tier._id]
+}
+
+Table custom.thread {
+	_id text [pk, unique]
+	"_company" custom.company [ref: - custom.company._id]
+	"_request" custom.request [ref: - custom.request._id]
+}
+
+Table custom.upload {
+	_id text [pk, unique]
+	"time_started" date
+	"time_completed" date
+	"_company" custom.company [ref: - custom.company._id]
+	"z_failedUploads" file[]
+	"json_matched" text[]
+	"count_total_uploaded" number
+	"json_uploaded" text[]
+	type option.type_of_upload [ref: - option.type_of_upload._id]
+	"z_project" project
+	"z_successfulUploads" file[]
+	"count_total_to_upload" number
+	"_segments" segment
+	"_accounts" account
+	"z_org_added" organization
+	"z_acct_duplicates" account
+	"z_category_added" category
+	"type_of_segment" option.company___object_to_hide [ref: - option.company___object_to_hide._id]
+}
+
+Table custom.user_meta {
+	_id text [pk, unique]
+	"_user" custom.user [ref: - custom.user._id]
+	"sora_status" text
+	"sora_sessionID" text
+	"plaid_returnPage" text
+	"sora_complete" boolean
+	"plaid_lastLinkToken" text
+}
+
+Table custom.vendor {
+	_id text [pk, unique]
+	"name_legal" text
+	notes text
+	"id_other" text
+	"qbo_id" text
+	"dwolla_id" text
+	"global_id" text
+	"qbo_error" text
+	"qbo_name" text
+	"z_contact_name_first" text
+	"dwolla_email" text
+	"name_display" text
+	"z_contact_email" text
+	"phone_primary" text
+	"email_primary" text
+	"email_payments" text
+	"z_contact_name_last" text
+	"_address" custom.address [ref: - custom.address._id]
+	"_company" custom.company [ref: - custom.company._id]
+	"_contacts - deleted" custom.contact [ref: - custom.contact._id]
+	"name_print_on_check" text
+	IntAcctingID text
+	"_contactMain" custom.contact [ref: - custom.contact._id]
+	IntAcctingName text
+	"z_contact_phone_formatted" text
+	"_contacts" contact
+	"_type" option.type_of_bill_payee [ref: - option.type_of_bill_payee._id]
+	"_payment_method_default" custom.billpayee [ref: - custom.billpayee._id]
+	"_payment_method_options" billpayee
+}
+
+Table custom.waiting_list {
+	_id text [pk, unique]
+	email text
+	"name_full" text
+}
+
+Table custom.website {
+	_id text [pk, unique]
+	Name text
+	Email text
+	"Logo light" image
+	"Light Favicon" image
+	"Bubble project id" text
+	"Plaid_env" text
+	"Plaid_id" text
+	"client_id" text
+	"Dwolla - Base URL" text
+	"Email HTML" text
+	"Logo dark" image
+	"Email HTML2" text
+	"Marqeta URL" text
+	"Login image" image
+	"SEO og title" text
+	"Dark Favicon" image
+	"Admin password - deleted" text
+	"Dwolla - Bank ID" text
+	"Primary color" text
+	"Social media 1 link" text
+	"Social media 2 link" text
+	"Social media 3 link" text
+	"App template ID - deleted" text
+	"Home0: Headline" text
+	"Usersnap off?" boolean
+	"Onboarding On" boolean
+	"SEO site description" text
+	"AmzBus - Host" text
+	"AmzBus - clientid" text
+	"AmzBus - loginuri" text
+	"Twitter og handle" text
+	"Twitter og image" image
+	"Facebook og image" image
+	"Home0: Subheadline" text
+	"Login page tagline" text
+	"Marqeta - Base URL" text
+	"AmzBus - AWS Region" text
+	"Ask for cookies?" boolean
+	"Social media 1 type" text
+	"Social media 2 type" text
+	"Social media 3 type" text
+	"Social media 4 link" text
+	"Social media 4 type" text
+	"Social media 5 link" text
+	"Social media 5 type" text
+	"Template version ID" text
+	"QB Online - Base URL" text
+	"AmzBus - redirect_uri" text
+	"Background image type - deleted" text
+	"Legal: Sign up is visible?" boolean
+	"Login page font color" text
+	"QB Online - Client ID" text
+	"Sidebar divider color" text
+	"AmzBus - applicationId" text
+	"Login page solid color" text
+	"Home0: Main section alignment" text
+	"Home0: Solid background color" text
+	"Sidebar background type" text
+	"Sidebar tab highlighter" text
+	"Home0: Background image" image
+	"Home0: Background type" text
+	"Sidebar hover font color" text
+	"Sidebar background image" image
+	"Home0: Headline font color" text
+	"Login page background type" text
+	"Sidebar default font color" text
+	"Set portal logo to dark?" boolean
+	"Sidebar selected font color" text
+	"Legal: Footer is visible?" boolean
+	"AmzBus - Base URL (User Auth)" text
+	"Home0: Background left image" image
+	"Home0: Subheadline font color" text
+	"Odd homepage background color" text
+	"Even homepage background color" text
+	"Sidebar solid background color" text
+	"Email verification required?" boolean
+	"JIT - Create Charge from JIT" boolean
+	"Login page gradient ending color" text
+	"Home0: Background centered image" image
+	"Login page gradient starting color" text
+	"List of blocks" homepage_block
+	"Home0: Background ending gradient color" text
+	"Sidebar gradient ending background color" text
+	"Home0: Background starting gradient color" text
+	"JIT - Fraud Transaction Score Threshold" number
+	"Sidebar gradient starting background color" text
+	"⚙️ CSV - Charge Item Headers" custom.charge_csv_download_settings [ref: - custom.charge_csv_download_settings._id]
+}
+
+Table custom.user {
+	_id text [pk, unique]
+	"name_last" text
+	"name_first" text
+	address1 text
+	address2 text
+	APPROVER custom.user [ref: - custom.user._id]
+	"Featured number - deleted" number
+	"Profile picture" image
+	"Owner?" boolean
+	Birthdate date
+	"action-logout" boolean
+	"Player ID" text
+	"Stripe id" text
+	addressZip text
+	"name_full" text
+	"heart_beat" date
+	"Last login" date
+	"utm_source" text
+	addressCity text
+	isTester boolean
+	"Role (text)" text
+	SITE custom.site [ref: - custom.site._id]
+	"2fa Verified" date
+	addressState text
+	"Approver?" boolean
+	"Cover photo" image
+	Inactive boolean
+	"Signup method" text
+	"Sign up date - deleted" date
+	"utm_campaign" text
+	onWaitList boolean
+	"Plan - deleted" custom.t_plan [ref: - custom.t_plan._id]
+	"Signup step" number
+	"phone_verified" text
+	"Stripe seller id" text
+	"telephone (text)" text
+	ACCOUNT custom.account [ref: - custom.account._id]
+	"Role (user)" option.roles [ref: - option.roles._id]
+	"phone1 (number)" number
+	"z_PROJECT" custom.project [ref: - custom.project._id]
+	"activeCOMPANY " custom.company [ref: - custom.company._id]
+	"hubspot_contact_id" text
+	"_userMeta" custom.user_meta [ref: - custom.user_meta._id]
+	"Date signup completed" date
+	"Push tokens - deleted" push
+	"CARDS (list)" card
+	"Push tokens" push
+	"ADMIN SITES (list)" site
+	"Date agree to admin terms" date
+	"(dep) listOfCompanies - deleted" custom.company [ref: - custom.company._id]
+	"Pending email verification - deleted" text
+	"_application" custom._application [ref: - custom._application._id]
+	"Address (geo)" geographic_address
+	"bill_payment_account" billpayee
+	"z_ORGANIZATION" custom.organization [ref: - custom.organization._id]
+	"APPROVALS (list)" card
+	"Location (geo) - deleted" geographic_address
+	"Card approval limit (number)" number
+	"Card creation limit (number)" number
+	linkedCompanies company
+	"LOGS (list)" history_log
+	"_profile_active" custom.linkedroledata [ref: - custom.linkedroledata._id]
+	"Marqeta Object - deleted" api.apiconnector2_SPU2_SPX2 [ref: - api.apiconnector2_SPU2_SPX2._id]
+	"REQUESTS (list)" card_request
+	"_profile_list" linkedroledata
+	"Role (KleerCard)" option.role_of_kleercard [ref: - option.role_of_kleercard._id]
+	"Date agreed to terms and privacy docs" date
+	"Role (A/P)" option.role_of_accounts_payable [ref: - option.role_of_accounts_payable._id]
+	"Pending email verification" custom.email_verification_request [ref: - custom.email_verification_request._id]
+}
+
+Table "option_sets.%p3" {
+	"page_name" text
+}
+
+Table "option_sets.active_status" {
+	"Active - deleted" text
+	"Yes/No" boolean
+	"Bank Account Connected" text
+}
+
+Table "option_sets.app_colors" {
+	hover text
+	standard text
+}
+
+Table "option_sets.bill_payee_options" {
+	type option.bill_payment_approval_method
+	textToShow text
+	userPaysFees boolean
+	"typeFeeApproval - deleted" boolean
+	userApprovesFees boolean
+	userEntersDetails boolean
+	"typeDetailsEntered - deleted" boolean
+}
+
+Table "option_sets.bill_payment_approval_method" {
+	"payeePays - deleted" boolean
+	"Text to show - deleted" text
+}
+
+Table "option_sets.bill_payment_status" {
+	color option.statuscolors
+	colorText text
+	"Can modify" boolean
+	colorBadge text
+}
+
+Table "option_sets.bill_status" {
+	color option.statuscolors
+	canEdit boolean
+	isTerminal boolean
+	"canDelete?" boolean
+	canMarkAsPaid boolean
+	canAddApprover boolean
+	possibleNextStates option.bill_status[]
+	"Cancel Payment Text" text
+}
+
+Table "option_sets.billing_period" {
+	days number
+	"SBFE_code" text
+}
+
+Table "option_sets.breakpoints" {
+	min number
+}
+
+Table "option_sets.business_type___dwolla" {
+	SBFE text
+	Dwolla text
+	BanCorp text
+	"Controller?" boolean
+	"_marqeta_type" option.marqeta___business_type
+}
+
+Table "option_sets.button_link" {
+	"page_path" text
+	"txt_button" text
+}
+
+Table "option_sets.charge_item_fields" {
+	description text
+	dontShow boolean
+	sanitize boolean
+	"json_field" text
+	"export_type" option.type_of_export
+	"raw_field_name" text
+	"is_amount_field" boolean
+	"dropdown_display" text
+	"raw_field_name_2" text
+	"raw_field_name_3" text
+}
+
+Table "option_sets.charge_status" {
+	values option.charge_status[]
+	filterOnly boolean
+}
+
+Table "option_sets.company___object_to_hide" {
+	number number
+	showParentAccount boolean
+}
+
+Table "option_sets.delimiter" {
+	value text
+}
+
+Table "option_sets.dwolla___beneficial_owner_status" {
+	Description text
+	Topic text
+	"Transaction restricted" boolean
+}
+
+Table "option_sets.dwolla___document_failure_reasons" {
+	Description text
+}
+
+Table "option_sets.dwolla___document_types" {
+	Description text
+	businessType option.business_type___dwolla[]
+	documentType text
+	"forController?" boolean
+	"Accepted File types" option.file_type[]
+	"US Beneficial Owner" boolean
+	"Foreign Beneficial Owner" boolean
+}
+
+Table "option_sets.dwolla_api___document_create_error" {
+	description text
+}
+
+Table "option_sets.dwolla_status_of_company" {
+	Description text
+	"Transaction Restricted" boolean
+	"Dwolla Status" text
+	"Event Topic Name" text
+	HideVerifyButton boolean
+	HideSubmitDocuments boolean
+}
+
+Table "option_sets.emails" {
+	content text
+}
+
+Table "option_sets.eventdirective" {
+	"Action - deleted" option.event_trigger_action
+	Type option.event_trigger_object
+	Operation option.event_trigger_type
+}
+
+Table "option_sets.faq_type" {
+	filter boolean
+	status boolean
+	values option.faq_type[]
+	"subtitle_display" text
+}
+
+Table "option_sets.file_type" {
+	fileExtension text
+}
+
+Table "option_sets.filter___bill_status" {
+	values option.bill_status[]
+}
+
+Table "option_sets.filter_card_status" {
+	values text[]
+}
+
+Table "option_sets.global_url" {
+	live text
+	test text
+}
+
+Table "option_sets.hours" {
+	"hour #" number
+}
+
+Table "option_sets.integration_options" {
+	isExternal boolean
+}
+
+Table "option_sets.integration_thirdparty_options" {
+	isExternal boolean
+}
+
+Table "option_sets.jit___create_charge_from_jit" {
+	"boolean Value" boolean
+}
+
+Table "option_sets.js_company_functions" {
+	fnName text
+}
+
+Table "option_sets.js_functions" {
+	fnName text
+}
+
+Table "option_sets.marqeta___business_type" {
+	"Marqeta Text" text
+}
+
+Table "option_sets.marqeta___url" {
+	URL text
+}
+
+Table "option_sets.mq___auth_type" {
+	values text[]
+}
+
+Table "option_sets.mq___card_status" {
+	isFilter boolean
+	filterText text
+	filterValues option.mq___card_status[]
+}
+
+Table "option_sets.oauth_provider" {
+	MatchDays number
+	ShortCode text
+	"Alert:SlackUrlSuffix" text
+	"FetchStarOverlap(Horus)" number
+	"Alert:TransactionCount" number
+}
+
+Table "option_sets.oauth_provider_apis" {
+	Method text
+	Endpoint text
+	"OAuth Provider" option.oauth_provider
+}
+
+Table "option_sets.onboarding_role" {
+	freeText boolean
+}
+
+Table "option_sets.onboarding_status" {
+	status option.statuscolors
+	"is_open" boolean
+	"can_edit" boolean
+	"value_list" option.onboarding_status[]
+	"filter_only" boolean
+	"title_display" text
+}
+
+Table "option_sets.onboarding_steps" {
+	"txt_title" text
+	order number
+	"txt_title2" text
+	"txt_title3" text
+	"hide_title" boolean
+	"step_number" number
+	"hide_buttons" boolean
+	createEvents option.onboarding_steps[]
+	"Hubspot value" text
+	"txt_description" text
+	"total_sub_steps" number
+	"txt_description2" text
+	"txt_description3" text
+}
+
+Table "option_sets.personal_portal___tabs" {
+	Title text
+	"icon_fa" text
+	Subtitle text
+	"page_path" text
+	"hero_icon" text
+	hasChildren boolean
+	"default_view" option.user_settings_card
+	"icon_default" text
+	"default_child" option.subtabs_of_portal
+}
+
+Table "option_sets.plaiderrors" {
+	errorCode text
+	txtButton text
+	txtDisplay text
+	hubspotValue text
+}
+
+Table "option_sets.reasons_for_suspending_company" {
+	"Hubspot Text" text
+}
+
+Table "option_sets.recursive_timing" {
+	seconds number
+}
+
+Table "option_sets.role_of_accounts_payable" {
+	"Is Approver" boolean
+	"Can Create Payment Method" boolean
+	"Can delete bill?" boolean
+	"Can Create Payment" boolean
+}
+
+Table "option_sets.roles" {
+	isAdmin boolean
+	"Text Value" text
+	"Users they can add/edit" option.roles[]
+}
+
+Table "option_sets.status_of_approval_request" {
+	terminal boolean
+}
+
+Table "option_sets.status_of_bill_payee" {
+	"icon-hero" text
+	color option.statuscolors
+	isActive boolean
+	"colorText - deleted" text
+	"colorBadge - deleted" text
+}
+
+Table "option_sets.status_of_payment" {
+	"Paid?" boolean
+	"Hide from UI?" boolean
+	"Can edit?" boolean
+	"Can merge?" boolean
+	"Can Initiate Payment?" boolean
+	"Include in balance calculation" boolean
+	"Include in credit used Calculation" boolean
+}
+
+Table "option_sets.status_of_payment_method_request" {
+	complete boolean
+}
+
+Table "option_sets.status_of_request" {
+	"Hide from filter" boolean
+}
+
+Table "option_sets.statuscolors" {
+	light text
+	dark text
+	border text
+	"fa-Icon" text
+}
+
+Table "option_sets.steps___form___request_card" {
+	next option.steps___form___request_card
+	prev option.steps___form___request_card
+	stepNumber number
+	percentComplete number
+}
+
+Table "option_sets.subscription_status" {
+	"value_list" option.subscription_status[]
+	"title_display" text
+}
+
+Table "option_sets.subscription_tier" {
+	number number
+	"isPrepaid?" boolean
+	"Hubspot value" text
+}
+
+Table "option_sets.subtabs_of_portal" {
+	view text
+	tabDisplay text
+}
+
+Table "option_sets.tab_card_controls" {
+	mobileText text
+}
+
+Table "option_sets.txn___payment_status" {
+	"is_paid" boolean
+}
+
+Table "option_sets.type_of_account" {
+	"Int-AP-Map - deleted" text
+}
+
+Table "option_sets.type_of_bill_payment" {
+	"icon-hero" text
+	isActive boolean
+	"Alt Label" text
+	"External Label" text
+}
+
+Table "option_sets.type_of_request" {
+	associatedEntityType option.type_of_entity
+}
+
+Table "option_sets.type_of_upload" {
+	"type of segment - deleted" option.company___object_to_hide
+}
+
+Table "option_sets.type_of_vendor_request" {
+	"complete - deleted" boolean
+	"Front end display" text
+}
+
+Table "option_sets.us_states" {
+	Code text
+}
+
+Table "option_sets.user_settings_card" {
+	description text
+	title text
+	order number
+	"icon_svg" text
+	"page_path" text
+	"button_text" text
+	"_parent_page" option.personal_portal___tabs
+	"button_links" option.button_link[]
+}
+
+Table "option_sets.verified_status___kyc" {
+	"Active?" boolean
+	"Marqeta Status" text
+}
+
+Table "option_sets.virtual_offset_days" {
+	Days number
+	Velocity text
+	"Monthly Label" text
+}
+
+Table "option_sets.weekdays" {
+	"Day #" number
+	"weekday?" boolean
+}
+
+Table "option_sets.yes___no" {
+	value boolean
+}
+
+Table "option_sets.yes___no0" {
+	value boolean
+	countMax number
+	countMin number
+	valueList boolean[]
+}
+
