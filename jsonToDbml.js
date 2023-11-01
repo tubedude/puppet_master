@@ -1,13 +1,7 @@
-// const testData = require("./example.json");
-// const fs = require("fs");
-
-// reges pattern to use with api connector
-// const regexApi = /^.+?\.(.+)\.[^.]+$/;
-// const regexApi = /^api\.(.+)\.[^.]+$/;
 const regexApi = /api\.(.+)/;
 
-let dbdiagram = "";
 const jsonToDbml = (db) => {
+    let dbdiagram = "";
     db.custom_types.forEach((item) => {
         item.path = item.path.replace("user_types.", "custom.");
         dbdiagram += `Table ${item.path} {`;

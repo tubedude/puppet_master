@@ -97,7 +97,7 @@ async function isBubbleApp(page) {
     const isBubbleApp = await page.evaluate(() => {
         return typeof appquery === "function";
     });
-    console.log("isBubbleApp", isBubbleApp);
+    return isBubbleApp;
 }
 
 async function extractBubbleData(page) {
