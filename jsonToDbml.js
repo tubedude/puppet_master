@@ -1,6 +1,24 @@
 const regexApi = /api\.(.+)/;
 
-const jsonToDbml = (db) => {
+function refIfNeeded(type, refDirection, add_ref) {
+
+    if (type === undefined) {
+        return;
+    }
+    // fix for option sets naming convention
+    type = type.replace("option.", "option_sets.");
+    let referenceId = "_id";
+    if (type.includes("option_sets.")) referenceId = "Display";
+    if (type.includes(".") && add_ref) {
+        if (type.includes("[]")) type = type.replace("[]", "");
+        return ` [ref: ${refDirection} ${type}.${referenceId}]`;
+    }
+    return ``;
+
+}
+
+const jsonToDbml = (db, add_ref) => {
+    console.log("looping through jsonToDbml, add_ref param is set to: " + add_ref);
     let dbdiagram = "";
     db.custom_types.forEach((item) => {
         item.path = item.path.replace("user_types.", "custom.");
@@ -29,7 +47,7 @@ const jsonToDbml = (db) => {
             field.name = quoteIfNeeded(field.name);
             if (type.includes("options.")) type = type.replace("options.", "option_sets.");
             dbdiagram += `\n\t${field.name} ${type}`;
-            dbdiagram += refIfNeeded(type, refDirection);
+            dbdiagram += refIfNeeded(type, refDirection, add_ref);
             // if (field.type.includes(".")) {
             // 	dbdiagram += ` [ref: ${refDirection} ${type}]`
             // }
@@ -47,13 +65,13 @@ const jsonToDbml = (db) => {
 			if (field.name.includes("- deleted")) return
             // handle list types
             let type = field.type;
-            let refDirection = "-";
+            // let refDirection = "-";
             if (
                 field.type.includes("list.") &&
                 field.type.includes("custom.")
             ) {
                 type = field.type.replace(/list\.custom\./g, "");
-                refDirection = ">";
+                // refDirection = ">";
             }
             if (
                 field.type.includes("list.") &&
@@ -86,21 +104,8 @@ const jsonToDbml = (db) => {
         return type;
     }
 
-    function refIfNeeded(type, refDirection) {
-        if (type === undefined) {
-            // console.log(type);
-            return;
-        }
-        // fix for option sets naming convention
-        type = type.replace("option.","option_sets.");
-        let referenceId = "_id"
-        if (type.includes("option_sets.")) referenceId = "Display"
-        if (type.includes(".")) {
-            if (type.includes("[]")) type = type.replace("[]", "");
-            return ` [ref: ${refDirection} ${type}.${referenceId}]`;
-        }
-        return ``;
-    }
+
+
 
     function handleApiConnector(type) {
         // TODO: create the api table if it doesn't exist, probably at the end of the initial loops, it checks for empty references and creates the needed tables.

@@ -31,7 +31,12 @@ app.get("/generate-dbml", async (req, res) => {
     const result = {};
     console.log("Received request to generate DBML.");
     // const { url } = req.body;
-    const { url } = req.query;
+    const { url, addref = 'false' } = req.query;
+    const add_ref = Boolean(addref.toLowerCase() === 'true')
+    console.log("[typeof addref]", typeof addref);
+    console.log("[addref]", addref);
+    console.log("[typeof add_ref]", typeof add_ref);
+    console.log("[add_ref]", add_ref);
     result.url = url;
     res.set("Content-Type", "application/json");
 
@@ -75,7 +80,7 @@ app.get("/generate-dbml", async (req, res) => {
         // writeToFile(JSON.stringify(result.db), result.url, "json");
 
         console.log("Raw Data extracted. Generating DBML syntax");
-        result.diagram = jsonToDbml(result.db);
+        result.diagram = jsonToDbml(result.db, add_ref);
 
         // writeToFile(result.diagram, result.url, "dbml");
 
