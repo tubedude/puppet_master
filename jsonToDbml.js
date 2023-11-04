@@ -1,4 +1,4 @@
-const regexApi = /api\.(.+)/;
+
 
 function refIfNeeded(type, refDirection, add_ref) {
 
@@ -17,9 +17,62 @@ function refIfNeeded(type, refDirection, add_ref) {
 
 }
 
+function quoteIfNeeded(type) {
+    if (/[^a-z0-9]/i.test(type)) {
+        return `"${type}"`;
+    }
+    return type;
+}
+
+function userIdIfNeeded(type) {
+    if (type === "user") {
+        return `custom.user`;
+    }
+    return type;
+}
+
+const regexApi = /api\.(.+)/;
+function handleApiConnector(type, apiDbdiagram) {
+    // convert string to array of lines
+    var arr = apiDbdiagram.split('\n');
+
+    var match = type.match(regexApi);
+    if (match) {
+    // console.log("[handleApiConnector] begin apiDbdiagram", apiDbdiagram)
+        var capturedGroup = match[1];
+        var replacedText = capturedGroup.replace(/\./g, "_");
+        var newType = match[0].replace(match[1], replacedText);
+
+        var strToAdd1 = `Table ${newType} {`;
+        // var strToAdd2 = `${newType}`;
+
+        // Check if the line Table ${type} already exists. If not, add it.
+        if (!arr.includes(strToAdd1)) {
+            arr.push(strToAdd1);
+            arr.push(`\t_id text`)
+            arr.push(`}\n`);
+        } 
+
+        // Find the line with Table ${type} and add {${type}} after it.
+/*         var tableIndex = arr.indexOf(strToAdd1);
+        if (tableIndex !== -1 && (tableIndex === arr.length-1 || !arr[tableIndex+1].startsWith(`${newType}`))) {
+            arr.splice(tableIndex + 1, 0, strToAdd2);
+        } */
+
+        // convert array back into string
+        apiDbdiagram = arr.join('\n');
+
+        return [newType, apiDbdiagram]
+    }
+
+    return [type, apiDbdiagram];
+}
+
+
 const jsonToDbml = (db, add_ref) => {
     console.log("looping through jsonToDbml, add_ref param is set to: " + add_ref);
     let dbdiagram = "";
+    let apiDbdiagram = "";
     db.custom_types.forEach((item) => {
         item.path = item.path.replace("user_types.", "custom.");
         dbdiagram += `Table ${item.path} {`;
@@ -34,7 +87,11 @@ const jsonToDbml = (db, add_ref) => {
             let type = field.type || "";
             let refDirection = "-";
             type = userIdIfNeeded(type);
-            type = handleApiConnector(type);
+            
+            const apiHandling = handleApiConnector(type, apiDbdiagram);
+            type = apiHandling[0];
+            apiDbdiagram = apiHandling[1]
+            
             if (type.includes("list.") && type.includes("custom.")) {
                 type = type.replace(/list\.custom\./g, "");
                 refDirection = ">";
@@ -65,13 +122,17 @@ const jsonToDbml = (db, add_ref) => {
 			if (field.name.includes("- deleted")) return
             // handle list types
             let type = field.type;
-            // let refDirection = "-";
+            let refDirection = "-";
+            const apiHandling = handleApiConnector(type, apiDbdiagram);
+            type = apiHandling[0];
+            apiDbdiagram = apiHandling[1]
+
             if (
                 field.type.includes("list.") &&
                 field.type.includes("custom.")
             ) {
                 type = field.type.replace(/list\.custom\./g, "");
-                // refDirection = ">";
+                refDirection = ">";
             }
             if (
                 field.type.includes("list.") &&
@@ -82,44 +143,13 @@ const jsonToDbml = (db, add_ref) => {
             }
             // split name and put it back together with quotes
             dbdiagram += `\n\t${quoteIfNeeded(field.name)} ${type}`;
+            dbdiagram += refIfNeeded(type, refDirection, add_ref)
         });
         dbdiagram += `\n}\n\n`;
     });
+    
+    dbdiagram += `\n\n${apiDbdiagram}`
 
-    // console.log(dbdiagram)
-
-    // The file path where you want to write the content
-
-    function quoteIfNeeded(type) {
-        if (/[^a-z0-9]/i.test(type)) {
-            return `"${type}"`;
-        }
-        return type;
-    }
-
-    function userIdIfNeeded(type) {
-        if (type === "user") {
-            return `custom.user`;
-        }
-        return type;
-    }
-
-
-
-
-    function handleApiConnector(type) {
-        // TODO: create the api table if it doesn't exist, probably at the end of the initial loops, it checks for empty references and creates the needed tables.
-        var match = type.match(regexApi);
-        if (match) {
-            // console.log(match);
-            var capturedGroup = match[1];
-            var replacedText = capturedGroup.replace(/\./g, "_");
-            type = match[0].replace(match[1], replacedText);
-            return type;
-        }
-        return type;
-    }
-    // console.log("[jsonToDbml] dbdiagram", dbdiagram);
     return dbdiagram;
 };
 
